@@ -903,6 +903,150 @@
       .wiki-sidebar { display: none; }
       .wiki-content { padding: 1.5rem 1.2rem; }
     }
+    /* ══════════════════════════════
+       SERVERS PAGE
+    ══════════════════════════════ */
+    .servers-page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .servers-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .servers-header h2 {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 1.8rem;
+      letter-spacing: 0.12em;
+      color: var(--parchment);
+      margin-bottom: 0.5rem;
+    }
+
+    .servers-header p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .server-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .server-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      background: var(--stone);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: 8px;
+      padding: 1.5rem 1.8rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .server-card:hover {
+      border-left-color: var(--gold-glow);
+      box-shadow: 0 4px 24px #00000044;
+    }
+
+    .server-card-soon {
+      border-left-color: var(--gravel);
+      opacity: 0.8;
+    }
+    .server-card-soon:hover { border-left-color: var(--muted); }
+
+    .server-card-flag { font-size: 2.4rem; flex-shrink: 0; margin-top: 2px; }
+
+    .server-card-body { flex: 1; }
+
+    .server-card-body h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--parchment);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.06em;
+    }
+
+    .server-region {
+      color: var(--gold);
+    }
+
+    .server-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 0.9rem;
+    }
+
+    .server-address {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .server-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .server-ip {
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: var(--emerald);
+      background: var(--ash);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 2px 10px;
+      letter-spacing: 0.03em;
+    }
+
+    .copy-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--ash);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .copy-btn.copied { border-color: var(--emerald); color: var(--emerald); }
+
+    .server-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--muted);
+      background: var(--ash);
+    }
+
+    .tag-online { color: #4caf50; border-color: #4caf5044; background: #4caf5010; }
+
   </style>
 </head>
 <body>
@@ -913,7 +1057,7 @@
   <ul class="nav-tabs">
     <li class="nav-tab active" data-page="home">Home</li>
     <li class="nav-tab"       data-page="map">Map</li>
-    <li class="nav-tab"       data-page="wiki">Wiki</li>
+    <li class="nav-tab"       data-page="servers">Servers</li>
   </ul>
 </nav>
 
@@ -979,7 +1123,7 @@
     <div class="socials-grid">
 
       <!-- Discord -->
-      <a class="social-btn" href="#" target="_blank">
+      <a class="social-btn" href="https://discord.gg/UccbanBC9t" target="_blank">
         <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
         Discord
       </a>
@@ -1029,38 +1173,15 @@
     <div class="map-controls">
       <div class="map-controls-left">
         <button class="map-ctrl-btn" id="mapReset">Reset View</button>
-        <button class="map-ctrl-btn" id="mapEditToggle">⊕ Edit Markers</button>
-        <button class="map-ctrl-btn" id="mapExportBtn">Export Markers</button>
       </div>
       <div class="map-controls-right">
         <a class="social-btn" href="#" target="_blank" style="text-decoration:none;">
           <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor;flex-shrink:0;">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
           </svg>
-          Interactive Map
+          Interactive BlueMap
         </a>
       </div>
-    </div>
-
-    <!-- Marker editor (shown in edit mode) -->
-    <div class="marker-editor" id="markerEditor">
-      <label>Name</label>
-      <input type="text" id="mName" placeholder="e.g. Zarevyn City" />
-      <label>Description</label>
-      <input type="text" id="mDesc" class="desc" placeholder="e.g. Main safezone" />
-      <label>Type</label>
-      <select id="mType">
-        <option value="city">🏙 City</option>
-        <option value="military">⚔ Military</option>
-        <option value="safezone">🛡 Safezone</option>
-        <option value="danger">☠ Danger Zone</option>
-      </select>
-      <span class="marker-editor-hint">Click on the map to place a marker</span>
-    </div>
-
-    <!-- Export output -->
-    <div class="marker-export" id="markerExport">
-      <textarea id="markerExportText" readonly></textarea>
     </div>
 
     <!--
@@ -1076,32 +1197,62 @@
 
 
 <!-- ════════════════════════════
-     WIKI PAGE
+     SERVERS PAGE
 ════════════════════════════ -->
-<div id="page-wiki" class="page">
-  <div class="wiki-layout">
+<div id="page-servers" class="page">
+  <div class="servers-page">
+    <div class="servers-header">
+      <h2>Official Servers</h2>
+      <p>Connect to an official DeadZone server and start surviving. Sponsored by Bisect Hosting.</p>
+    </div>
+    <div class="server-cards">
 
-    <!-- Sidebar nav -->
-    <aside class="wiki-sidebar">
-      <p class="sidebar-heading">Wiki</p>
-      <a class="wiki-nav-item active" data-article="getting-started">Getting Started</a>
-      <a class="wiki-nav-item" data-article="installation">Installation</a>
-      <a class="wiki-nav-item" data-article="survival-guide">Survival Guide</a>
-      <a class="wiki-nav-item" data-article="faq">FAQ</a>
-      <!-- Add more entries as needed -->
-    </aside>
-
-    <!-- Content -->
-    <main class="wiki-content">
-      <div class="wiki-editor-toggle">
-        <button class="toggle-btn active" id="btnPreview">Preview</button>
-        <button class="toggle-btn" id="btnEdit">Edit Markdown</button>
+      <!-- US Server -->
+      <div class="server-card">
+        <div class="server-card-flag">🇺🇸</div>
+        <div class="server-card-body">
+          <h3>DeadZone <span class="server-region">US</span></h3>
+          <div class="server-address">
+            <span class="server-label">Address</span>
+            <code class="server-ip" id="ipUS">deadzoneus.modded.fun</code>
+            <button class="copy-btn" onclick="copyIP('ipUS', this)">Copy</button>
+          </div>
+          <div class="server-tags">
+            <span class="tag tag-online">● Online</span>
+          </div>
+        </div>
       </div>
 
-      <div class="wiki-body" id="wikiBody"></div>
-      <textarea class="wiki-textarea" id="wikiTextarea"></textarea>
-    </main>
+      <!-- EU Server -->
+      <div class="server-card">
+        <div class="server-card-flag">🇪🇺</div>
+        <div class="server-card-body">
+          <h3>DeadZone <span class="server-region">EU</span></h3>
+          <div class="server-address">
+            <span class="server-label">Address</span>
+            <code class="server-ip" id="ipEU">deadzoneeu.modded.fun</code>
+            <button class="copy-btn" onclick="copyIP('ipEU', this)">Copy</button>
+          </div>
+          <div class="server-tags">
+            <span class="tag tag-online">● Online</span>
+          </div>
+        </div>
+      </div>
 
+      <!-- More soon -->
+      <div class="server-card server-card-soon">
+        <div class="server-card-flag">🌐</div>
+        <div class="server-card-body">
+          <h3>More Servers <span class="server-region">Soon</span></h3>
+          <p class="server-desc">More regions coming in the future. Want to host a public DeadZone server and get listed here?</p>
+          <a class="social-btn" href="https://discord.gg/UccbanBC9t" target="_blank" style="text-decoration:none;margin-top:0.5rem;">
+            <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor;flex-shrink:0;"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+            Contact Us on Discord
+          </a>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -1148,149 +1299,6 @@
 
   // Auto-advance
   setInterval(() => goTo(current + 1), 5000);
-
-  /* ─── Wiki articles ─── */
-  const articles = {
-    'getting-started': `# Getting Started
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-
-## Lorem Ipsum
-
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-## Dolor Sit Amet
-
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-
-- Lorem ipsum dolor sit amet
-- Consectetur adipiscing elit
-- Sed do eiusmod tempor incididunt
-- Ut labore et dolore magna aliqua
-
-> **Nota:** Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores.
-`,
-
-    'installation': `# Installation
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.
-
-## Via CurseForge App
-
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-
-1. Lorem ipsum dolor sit amet
-2. Consectetur adipiscing elit
-3. Sed do eiusmod tempor incididunt
-4. Ut labore et dolore magna aliqua
-
-## Via Prism Launcher
-
-\`\`\`
-Lorem ipsum dolor sit amet
-Consectetur adipiscing elit
-Sed do eiusmod tempor
-\`\`\`
-
-## Manual Installation
-
-Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.
-
-| Step | Action | Notes |
-|------|--------|-------|
-| 1 | Lorem ipsum | Dolor sit amet |
-| 2 | Consectetur | Adipiscing elit |
-| 3 | Sed do eiusmod | Tempor incididunt |
-`,
-
-    'survival-guide': `# Survival Guide
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-
-## Consectetur Adipiscing
-
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-## Sed Do Eiusmod
-
-Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-
-> At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.
-
-## Tempor Incididunt
-
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Totam rem aperiam eaque ipsa quae ab illo inventore veritatis.
-
-- Lorem ipsum dolor sit amet, consectetur adipiscing
-- Sed do eiusmod tempor incididunt ut labore
-- Ut enim ad minim veniam, quis nostrud
-- Duis aute irure dolor in reprehenderit
-
-## Ut Labore Et Dolore
-
-Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.
-`,
-
-    'faq': `# Frequently Asked Questions
-
-## Lorem ipsum dolor sit amet?
-
-Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-
-## Sed do eiusmod tempor?
-
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-## Ut enim ad minim veniam?
-
-Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.
-
-## Quis nostrud exercitation?
-
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-
-## At vero eos et accusamus?
-
-Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.
-`,
-  };
-
-  const wikiBody     = document.getElementById('wikiBody');
-  const wikiTextarea = document.getElementById('wikiTextarea');
-  const btnPreview   = document.getElementById('btnPreview');
-  const btnEdit      = document.getElementById('btnEdit');
-  const navItems     = document.querySelectorAll('.wiki-nav-item');
-
-  let activeArticle = 'getting-started';
-
-  function renderArticle(key) {
-    activeArticle = key;
-    const md = articles[key] || '# Not found\n\nThis article does not exist yet.';
-    wikiBody.innerHTML = marked.parse(md);
-    wikiTextarea.value = md;
-    navItems.forEach(n => n.classList.toggle('active', n.dataset.article === key));
-  }
-
-  navItems.forEach(item => {
-    item.addEventListener('click', () => renderArticle(item.dataset.article));
-  });
-
-  btnPreview.addEventListener('click', () => {
-    articles[activeArticle] = wikiTextarea.value;
-    wikiBody.innerHTML = marked.parse(wikiTextarea.value);
-    wikiBody.style.display = '';
-    wikiTextarea.classList.remove('visible');
-    btnPreview.classList.add('active');
-    btnEdit.classList.remove('active');
-  });
-
-  btnEdit.addEventListener('click', () => {
-    wikiTextarea.value = articles[activeArticle];
-    wikiTextarea.classList.add('visible');
-    wikiBody.style.display = 'none';
-    btnEdit.classList.add('active');
-    btnPreview.classList.remove('active');
-  });
 
   /* ─── Hero parallax ─── */
   const heroBgImg = document.querySelector('#heroBg img');
@@ -1435,27 +1443,20 @@ Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saep
       {"id":42,"nx":0.4885203159039562,"ny":0.7230115595161861,"name":"Broken Bridge","desc":"A ruined bridge between towns.","type":"city"},
       {"id":46,"nx":0.5960960474665974,"ny":0.9176864637989087,"name":"Town","desc":"","type":"city"},
       {"id":47,"nx":0.6817545548446466,"ny":0.7608792568480999,"name":"Town","desc":"","type":"city"},
-      {"id":48,"nx":0.6678144928895373,"ny":0.6973670540792677,"name":"Town","desc":"","type":"city"},
       {"id":49,"nx":0.6641488341275623,"ny":0.8232409513283725,"name":"Town","desc":"","type":"city"},
       {"id":50,"nx":0.7113121676608016,"ny":0.8325306988424954,"name":"Town","desc":"","type":"city"},
       {"id":51,"nx":0.7098829757355519,"ny":0.8932713556656067,"name":"Town","desc":"","type":"city"},
-      {"id":52,"nx":0.3656241079935178,"ny":0.8306216799610195,"name":"Town","desc":"","type":"city"},
-      {"id":53,"nx":0.31768148237290406,"ny":0.7932637898670347,"name":"Town","desc":"","type":"city"},
-      {"id":54,"nx":0.4857653521574883,"ny":0.6539907528246733,"name":"Town","desc":"","type":"city"},
-      {"id":55,"nx":0.2492674988708896,"ny":0.8067774311643452,"name":"Town","desc":"","type":"city"},
       {"id":57,"nx":0.7852009129186055,"ny":0.8863938340990806,"name":"Stable","desc":"A small stable.","type":"city"},
       {"id":60,"nx":0.8221853198508935,"ny":0.8395144654595161,"name":"Zapretinsk","desc":"A major southern town known for gang activity.","type":"city"},
       {"id":61,"nx":0.7834422260304813,"ny":0.8644165647153127,"name":"Storehouse","desc":"","type":"city"},
       {"id":64,"nx":0.9062216802697467,"ny":0.9332526139642762,"name":"Hunter Cabins","desc":"","type":"city"},
       {"id":65,"nx":0.9149080577505425,"ny":0.8829947111249352,"name":"Hunter Cabins","desc":"","type":"city"},
       {"id":66,"nx":0.3072087564757902,"ny":0.9364788057340342,"name":"Hunter Cabins","desc":"","type":"city"},
-      {"id":67,"nx":0.3970233678748939,"ny":0.5739171370852387,"name":"Town","desc":"","type":"city"},
       {"id":68,"nx":0.3102999415514944,"ny":0.6470146624302308,"name":"Town","desc":"","type":"city"},
       {"id":69,"nx":0.26719874940756516,"ny":0.5974065072143357,"name":"Town","desc":"","type":"city"},
       {"id":70,"nx":0.11282455120316488,"ny":0.5466995104304451,"name":"Military Campsite","desc":"A military campsite south of the castle ruins.","type":"military"},
       {"id":72,"nx":0.7581216201768528,"ny":0.751315328973306,"name":"Town","desc":"","type":"city"},
       {"id":75,"nx":0.6414780522858997,"ny":0.7705923957818793,"name":"Residential Buildings","desc":"Two buildings bearing a frightening message: \"Not safe\"","type":"city"},
-      {"id":77,"nx":0.5928061046150114,"ny":0.5344081191172169,"name":"Town","desc":"It is said to be the first settlement in Zarevyn.","type":"city"},
       {"id":78,"nx":0.9280274333495333,"ny":0.37557364748032507,"name":"Korska Harbour","desc":"A civilian harbour with military connections.","type":"danger"},
       {"id":79,"nx":0.9513534011577177,"ny":0.32429724639375684,"name":"Cargo Ship","desc":"An abandoned cargo ship, rumoured to carry military equipment.","type":"military"},
       {"id":81,"nx":0.6965879242446874,"ny":0.6164825461428662,"name":"Gas Station","desc":"","type":"city"},
@@ -1477,9 +1478,20 @@ Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saep
       {"id":105,"nx":0.7399550377214482,"ny":0.7603324328810593,"name":"Office Building","desc":"","type":"city"},
       {"id":107,"nx":0.4802443312884686,"ny":0.5186658593567718,"name":"Bunker K-23","desc":"Military bunker entrance, going deep underground.","type":"danger"},
       {"id":108,"nx":0.8380306829274533,"ny":0.1432632458410145,"name":"Black Market","desc":"A small settlement inhabited by a trader","type":"danger"},
-      {"id":110,"nx":0.24573079021014393,"ny":0.7502513911587056,"name":"Fallen Plane","desc":"A crashed civilian airplane.","type":"city"}
+      {"id":110,"nx":0.24573079021014393,"ny":0.7502513911587056,"name":"Fallen Plane","desc":"A crashed civilian airplane.","type":"city"},
+      {"id":112,"nx":0.589323339689516,"ny":0.5311152279921498,"name":"Mirovka","desc":"It is said to be the first settlement in Zarevyn.","type":"city"},
+      {"id":113,"nx":0.4899117573411616,"ny":0.10909701688198549,"name":"Military Station","desc":"A base in the mountains.","type":"military"},
+      {"id":114,"nx":0.6662482689249953,"ny":0.7092836212989658,"name":"Gareska","desc":"A farming town south of the river.","type":"city"},
+      {"id":115,"nx":0.4267946226221125,"ny":0.7628390364291855,"name":"Ostrov","desc":"A riverside town between the bridges.","type":"city"},
+      {"id":118,"nx":0.7280761094044625,"ny":0.714311027341392,"name":"Military Checkpoint","desc":"","type":"military"},
+      {"id":120,"nx":0.36418486959694113,"ny":0.8261442011188995,"name":"Zaviet","desc":"A rural town south of the mountains.","type":"city"},
+      {"id":121,"nx":0.31602515068557063,"ny":0.7915431740116754,"name":"Zavodsk","desc":"A passage to the northern lands.","type":"city"},
+      {"id":122,"nx":0.24857040239762568,"ny":0.8059542003593957,"name":"Koshov","desc":"","type":"city"},
+      {"id":125,"nx":0.49080477666133604,"ny":0.17964090842399236,"name":"SOON","desc":"???","type":"city"},
+      {"id":126,"nx":0.3345516701340713,"ny":0.4839805024648903,"name":"SOON","desc":"???","type":"city"},
+      {"id":127,"nx":0.48579374564422756,"ny":0.6526894850325252,"name":"Zamok","desc":"A town north of the Broken Bridge.","type":"city"},
+      {"id":128,"nx":0.39783466802000866,"ny":0.5763950508955621,"name":"Zvonok","desc":"A major town in a mountain valley.","type":"city"}
     ];
-    let markerIdSeq = Math.max(...markers.map(m => m.id), 0);
 
     function renderMarker(m) {
       const el = document.createElement('div');
@@ -1520,47 +1532,23 @@ Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saep
     markers.forEach(renderMarker);
 
     // ── Edit mode ──
-    const editBtn     = document.getElementById('mapEditToggle');
-    const editorPanel = document.getElementById('markerEditor');
+    // (Edit mode removed — markers are hardcoded)
 
-    editBtn.addEventListener('click', () => {
-      editMode = !editMode;
-      placing  = editMode;
-      editBtn.classList.toggle('active', editMode);
-      editBtn.textContent = editMode ? '✕ Exit Edit Mode' : '⊕ Edit Markers';
-      editorPanel.classList.toggle('visible', editMode);
-      wrap.classList.toggle('placing', editMode);
-      markerLayer.querySelectorAll('.map-marker').forEach(el =>
-        el.classList.toggle('map-editing', editMode));
-    });
-
-    // Click to place
-    wrap.addEventListener('click', e => {
-      if (!placing || dragging) return;
-      const rect = wrap.getBoundingClientRect();
-      const { nx, ny } = screenToNorm(e.clientX - rect.left, e.clientY - rect.top);
-      const name = document.getElementById('mName').value.trim() || 'Unnamed';
-      const desc = document.getElementById('mDesc').value.trim();
-      const type = document.getElementById('mType').value;
-      const m = { id: ++markerIdSeq, nx, ny, name, desc, type };
-      markers.push(m);
-      renderMarker(m);
-      if (editMode) markerLayer.querySelector(`[data-id="${m.id}"]`)?.classList.add('map-editing');
-    });
-
-    // ── Export ──
-    document.getElementById('mapExportBtn').addEventListener('click', () => {
-      const panel = document.getElementById('markerExport');
-      document.getElementById('markerExportText').value = JSON.stringify(markers, null, 2);
-      panel.classList.toggle('visible');
-      if (panel.classList.contains('visible')) document.getElementById('markerExportText').select();
-    });
+    // Click to place — disabled
+    // Export — disabled
 
     applyTransform(false);
   })();
 
-  // Initial render
-  renderArticle('getting-started');
+  /* ─── Copy IP helper ─── */
+  function copyIP(id, btn) {
+    const text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
 </script>
 </body>
 </html>
