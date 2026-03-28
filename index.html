@@ -493,8 +493,8 @@
 
     /* Map viewer container — clips the panned/zoomed canvas */
     .map-image-wrap {
-      width: 100%; max-width: 900px;
-      height: 68vh;
+      width: 100%; max-width: 75vh; /* square: width capped to viewport height */
+      aspect-ratio: 1 / 1;
       position: relative;
       border: 2px solid var(--border);
       border-radius: 8px;
@@ -520,11 +520,18 @@
     .map-canvas img {
       display: block;
       width: 100%; height: 100%;
-      object-fit: contain;
-      object-position: center;
+      object-fit: cover; /* square wrap + square image = perfect fill, no offsets */
       user-select: none;
       -webkit-user-drag: none;
       pointer-events: none;
+    }
+
+    /* Marker overlay — sits over wrap, never transformed */
+    .map-marker-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
     }
 
     /* Zoom hint */
@@ -556,12 +563,12 @@
     }
 
     .map-marker-pin {
-      width: 14px; height: 20px;
+      width: 22px; height: 30px;
       position: relative;
-      filter: drop-shadow(0 2px 4px #000a);
+      filter: drop-shadow(0 2px 5px #000c);
       transition: transform 0.15s;
     }
-    .map-marker:hover .map-marker-pin { transform: scale(1.25) translateY(-2px); }
+    .map-marker:hover .map-marker-pin { transform: scale(1.3) translateY(-3px); }
 
     .map-marker-pin svg { width: 100%; height: 100%; }
 
@@ -1013,8 +1020,9 @@
     <div class="map-image-wrap" id="mapImageWrap">
       <div class="map-canvas" id="mapCanvas">
         <img src="assets/map.png" alt="Zarevyn Region Map" id="mapImg" draggable="false" />
-        <!-- Markers injected here by JS -->
       </div>
+      <!-- Marker overlay: never transformed, always on top -->
+      <div class="map-marker-layer" id="markerLayer"></div>
       <span class="map-zoom-hint">Scroll to zoom · Drag to pan</span>
     </div>
 
@@ -1045,7 +1053,7 @@
       <select id="mType">
         <option value="city">🏙 City</option>
         <option value="military">⚔ Military</option>
-        <option value="poi">📍 Point of Interest</option>
+        <option value="safezone">🛡 Safezone</option>
         <option value="danger">☠ Danger Zone</option>
       </select>
       <span class="marker-editor-hint">Click on the map to place a marker</span>
@@ -1269,16 +1277,17 @@ Check the **Map** tab — if it's live, the server is up! Server IP will be list
 
   /* ─── Map zoom, pan & markers ─── */
   (function() {
-    const wrap   = document.getElementById('mapImageWrap');
-    const canvas = document.getElementById('mapCanvas');
-    if (!wrap || !canvas) return;
+    const wrap        = document.getElementById('mapImageWrap');
+    const canvas      = document.getElementById('mapCanvas');
+    const markerLayer = document.getElementById('markerLayer');
+    if (!wrap || !canvas || !markerLayer) return;
 
     const MIN = 1, MAX = 12;
     let scale = 1, tx = 0, ty = 0;
     let dragging = false, dragStartX, dragStartY, lastTx, lastTy;
     let editMode = false, placing = false;
 
-    // ── Transform helpers ──
+    // ── Transform ──
     function applyTransform(smooth) {
       canvas.style.transition = smooth ? 'transform 0.3s ease' : 'none';
       canvas.style.transform  = `translate(${tx}px, ${ty}px) scale(${scale})`;
@@ -1294,20 +1303,36 @@ Check the **Map** tab — if it's live, the server is up! Server IP will be list
       ty = clamp(ty, h - h * scale, 0);
     }
 
+    // ── Coordinate helpers ──
+    // Since the wrap is square and the image fills it 100% (object-fit:cover on a square),
+    // nx/ny map directly: pixel = n * wrapSize, then apply transform.
+    function normToScreen(nx, ny) {
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      return {
+        x: tx + nx * w * scale,
+        y: ty + ny * h * scale,
+      };
+    }
+
+    function screenToNorm(cx, cy) {
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      return {
+        nx: clamp((cx - tx) / (w * scale), 0, 1),
+        ny: clamp((cy - ty) / (h * scale), 0, 1),
+      };
+    }
+
     // ── Zoom to pointer ──
     wrap.addEventListener('wheel', e => {
       e.preventDefault();
-      const rect  = wrap.getBoundingClientRect();
-      const mx    = e.clientX - rect.left;   // mouse position in wrap coords
-      const my    = e.clientY - rect.top;
-      const delta = e.deltaY < 0 ? 1.15 : 0.87;
-      const newScale = clamp(scale * delta, MIN, MAX);
-
-      // Adjust tx/ty so the point under the cursor stays fixed
+      const rect     = wrap.getBoundingClientRect();
+      const mx       = e.clientX - rect.left;
+      const my       = e.clientY - rect.top;
+      const factor   = e.deltaY < 0 ? 1.15 : 0.87;
+      const newScale = clamp(scale * factor, MIN, MAX);
       tx = mx - (mx - tx) * (newScale / scale);
       ty = my - (my - ty) * (newScale / scale);
       scale = newScale;
-
       if (scale === MIN) { tx = 0; ty = 0; }
       else clampPan();
       applyTransform(false);
@@ -1317,7 +1342,6 @@ Check the **Map** tab — if it's live, the server is up! Server IP will be list
     // ── Drag to pan ──
     wrap.addEventListener('mousedown', e => {
       if (placing) return;
-      if (scale <= 1) return;
       dragging = true;
       dragStartX = e.clientX; dragStartY = e.clientY;
       lastTx = tx; lastTy = ty;
@@ -1336,73 +1360,53 @@ Check the **Map** tab — if it's live, the server is up! Server IP will be list
     document.getElementById('mapReset').addEventListener('click', () => {
       scale = 1; tx = 0; ty = 0;
       applyTransform(true);
-      setTimeout(() => repositionMarkers(), 320);
+      setTimeout(repositionMarkers, 320);
     });
 
-    // ── Marker data ──
-    // Each marker: { id, nx, ny, name, desc, type }
-    // nx/ny are normalised 0-1 coords relative to the image
+    // ── Marker types ──
     const COLORS = {
       city:     '#f0c060',
       military: '#cc4444',
-      poi:      '#4a9eff',
-      danger:   '#cc0000',
+      safezone: '#4a9eff',
+      poi:      '#4a9eff', // legacy alias
+      danger:   '#dd2222',
     };
     const ICONS = {
       city:     'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
       military: 'M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z',
+      safezone: 'M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z',
       poi:      'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z',
       danger:   'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z',
     };
 
-    let markers = [];
-    let markerIdSeq = 0;
-
-    function markerPinSVG(type) {
+    function pinSVG(type) {
       const col = COLORS[type] || '#f0c060';
       return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="${ICONS[type]}" fill="${col}" stroke="#000" stroke-width="0.5"/>
+        <path d="${ICONS[type] || ICONS.city}" fill="${col}" stroke="#000" stroke-width="0.8"/>
       </svg>`;
     }
 
-    // Convert normalised coords → pixel position inside wrap
-    function normToWrap(nx, ny) {
-      const iw = wrap.clientWidth, ih = wrap.clientHeight;
-      // canvas fills wrap, image fills canvas with object-fit:contain
-      // since the image is square, it fills the shorter dimension
-      const imgSize = Math.min(iw, ih);
-      const offX = (iw - imgSize) / 2;
-      const offY = (ih - imgSize) / 2;
-      const px = offX + nx * imgSize;
-      const py = offY + ny * imgSize;
-      // apply current transform
-      return {
-        x: tx + px * scale,
-        y: ty + py * scale,
-      };
-    }
-
-    // Convert a click inside wrap → normalised coords
-    function wrapToNorm(cx, cy) {
-      const iw = wrap.clientWidth, ih = wrap.clientHeight;
-      const imgSize = Math.min(iw, ih);
-      const offX = (iw - imgSize) / 2;
-      const offY = (ih - imgSize) / 2;
-      // invert the transform
-      const px = (cx - tx) / scale;
-      const py = (cy - ty) / scale;
-      return {
-        nx: clamp((px - offX) / imgSize, 0, 1),
-        ny: clamp((py - offY) / imgSize, 0, 1),
-      };
-    }
+    // ── Hardcoded markers ──
+    let markers = [
+      {"id":1,"nx":0.8765560165975104,"ny":0.45311202053212524,"name":"Korska","desc":"A main city in the Zarevyn region.","type":"city"},
+      {"id":2,"nx":0.06670399226130377,"ny":0.6886676064372256,"name":"Sever-22","desc":"A backup military base near Zarevyn airfield","type":"military"},
+      {"id":4,"nx":0.1358921161825726,"ny":0.7871369167976854,"name":"Air Base Sever-21","desc":"Zarevyn main airfield and a point of interest for military loot.","type":"military"},
+      {"id":5,"nx":0.5902489626556017,"ny":0.2954356719844074,"name":"The Lab","desc":"A secret laboratory in the north of Zarevyn.","type":"danger"},
+      {"id":6,"nx":0.7064315352697096,"ny":0.3099584935611709,"name":"The Prison","desc":"Zarevyn military prison.","type":"danger"},
+      {"id":7,"nx":0.4346473029045643,"ny":0.37012446866490534,"name":"Northern Safezone","desc":"","type":"safezone"},
+      {"id":8,"nx":0.6483402489626556,"ny":0.6585062114034945,"name":"Southern Safezone","desc":"","type":"safezone"},
+      {"id":10,"nx":0.06742738589211618,"ny":0.45933608692216676,"name":"Ruined Castle","desc":"","type":"military"},
+      {"id":11,"nx":0.8246887966804979,"ny":0.8390041367146979,"name":"Zapretinsk","desc":"","type":"city"}
+    ];
+    let markerIdSeq = Math.max(...markers.map(m => m.id), 0);
 
     function renderMarker(m) {
       const el = document.createElement('div');
       el.className = 'map-marker';
       el.dataset.id = m.id;
+      el.style.pointerEvents = 'all';
       el.innerHTML = `
-        <div class="map-marker-pin">${markerPinSVG(m.type)}</div>
+        <div class="map-marker-pin">${pinSVG(m.type)}</div>
         <div class="map-marker-tooltip">
           <strong>${m.name}</strong>
           ${m.desc ? `<span>${m.desc}</span>` : ''}
@@ -1414,33 +1418,28 @@ Check the **Map** tab — if it's live, the server is up! Server IP will be list
         markers = markers.filter(x => x.id !== m.id);
         el.remove();
       });
-      canvas.appendChild(el);
-      positionMarkerEl(el, m);
-      return el;
+      markerLayer.appendChild(el);
+      positionMarker(el, m);
     }
 
-    function positionMarkerEl(el, m) {
-      const pos = normToWrap(m.nx, m.ny);
-      // markers are children of wrap, not canvas, so we position in wrap space
+    function positionMarker(el, m) {
+      const pos = normToScreen(m.nx, m.ny);
       el.style.left = pos.x + 'px';
       el.style.top  = pos.y + 'px';
     }
 
     function repositionMarkers() {
-      wrap.querySelectorAll('.map-marker').forEach(el => {
+      markerLayer.querySelectorAll('.map-marker').forEach(el => {
         const m = markers.find(x => x.id == el.dataset.id);
-        if (m) positionMarkerEl(el, m);
+        if (m) positionMarker(el, m);
       });
     }
 
-    // Move markers to wrap (overlay, not inside canvas) so transform doesn't affect them
-    function initMarkerLayer() {
-      // markers are absolutely positioned children of wrap, rendered after canvas
-    }
-    initMarkerLayer();
+    // Render all hardcoded markers on load
+    markers.forEach(renderMarker);
 
     // ── Edit mode ──
-    const editBtn    = document.getElementById('mapEditToggle');
+    const editBtn     = document.getElementById('mapEditToggle');
     const editorPanel = document.getElementById('markerEditor');
 
     editBtn.addEventListener('click', () => {
@@ -1450,35 +1449,30 @@ Check the **Map** tab — if it's live, the server is up! Server IP will be list
       editBtn.textContent = editMode ? '✕ Exit Edit Mode' : '⊕ Edit Markers';
       editorPanel.classList.toggle('visible', editMode);
       wrap.classList.toggle('placing', editMode);
-      wrap.querySelectorAll('.map-marker').forEach(el =>
+      markerLayer.querySelectorAll('.map-marker').forEach(el =>
         el.classList.toggle('map-editing', editMode));
     });
 
-    // Click to place marker
+    // Click to place
     wrap.addEventListener('click', e => {
       if (!placing || dragging) return;
       const rect = wrap.getBoundingClientRect();
-      const cx = e.clientX - rect.left;
-      const cy = e.clientY - rect.top;
-      const { nx, ny } = wrapToNorm(cx, cy);
+      const { nx, ny } = screenToNorm(e.clientX - rect.left, e.clientY - rect.top);
       const name = document.getElementById('mName').value.trim() || 'Unnamed';
       const desc = document.getElementById('mDesc').value.trim();
       const type = document.getElementById('mType').value;
       const m = { id: ++markerIdSeq, nx, ny, name, desc, type };
       markers.push(m);
       renderMarker(m);
+      if (editMode) markerLayer.querySelector(`[data-id="${m.id}"]`)?.classList.add('map-editing');
     });
 
     // ── Export ──
-    const exportBtn  = document.getElementById('mapExportBtn');
-    const exportPanel = document.getElementById('markerExport');
-    const exportText  = document.getElementById('markerExportText');
-
-    exportBtn.addEventListener('click', () => {
-      const json = JSON.stringify(markers, null, 2);
-      exportText.value = json;
-      exportPanel.classList.toggle('visible');
-      if (exportPanel.classList.contains('visible')) exportText.select();
+    document.getElementById('mapExportBtn').addEventListener('click', () => {
+      const panel = document.getElementById('markerExport');
+      document.getElementById('markerExportText').value = JSON.stringify(markers, null, 2);
+      panel.classList.toggle('visible');
+      if (panel.classList.contains('visible')) document.getElementById('markerExportText').select();
     });
 
     applyTransform(false);
