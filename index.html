@@ -122,21 +122,52 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 5rem 2rem 3rem;
+      padding: 6rem 2rem 5rem;
       text-align: center;
       position: relative;
       gap: 1.5rem;
+      overflow: hidden;
+      min-height: 600px;
     }
 
-    /* Radial glow behind logo */
+    /* Parallax background image */
+    .hero-bg {
+      position: absolute;
+      inset: -60px; /* extra room for parallax travel */
+      z-index: 0;
+      background-image: url("assets/background.png");
+      background-size: cover;
+      background-position: center 40%;
+      filter: blur(7px) brightness(0.28) saturate(0.8);
+      transform: scale(1.08);
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    /* Bottom gradient fade into page */
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 180px;
+      background: linear-gradient(to bottom, transparent 0%, var(--bedrock) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Radial red glow overlay */
     .hero::before {
       content: '';
       position: absolute;
-      top: 0; left: 50%; transform: translateX(-50%);
-      width: 600px; height: 400px;
-      background: radial-gradient(ellipse at 50% 0%, #cc000033 0%, transparent 70%);
+      inset: 0; z-index: 1;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 30%, #cc000022 0%, transparent 70%),
+        radial-gradient(ellipse 100% 60% at 50% 100%, #0c0b09aa 0%, transparent 80%);
       pointer-events: none;
     }
+
+    /* All direct hero children sit above bg layers */
+    .hero > * { position: relative; z-index: 2; }
 
     .logo-box {
       width: 160px; height: 160px;
@@ -611,17 +642,20 @@
 
   <!-- Hero -->
   <section class="hero">
+    <div class="hero-bg" id="heroBg"></div>
     <img src="assets/logo.png" alt="DeadZone Logo" style="max-width:320px;width:100%;height:auto;filter:drop-shadow(0 0 40px #cc000066);image-rendering:pixelated;" />
 
-    <p class="pack-subtitle">The multiplayer zombie survival modpack</p>
+    <h1 class="pack-title">DeadZone</h1>
+    <p class="pack-subtitle">A Minecraft Survival Horror Modpack</p>
 
     <div class="ornament"><span class="ornament-icon">◆</span></div>
   </section>
 
   <!-- Description -->
   <section class="description-section">
-    <p>DEADZONE is a multiplayer survival modpack within an apocalyptic world. The modpack is played in adventure mode and the experience is carefully crafted to promote PVP and PVE. Find settlements, gather loot and weapons, and find your way into the safezones.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
     <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum et dolorum fuga.</p>
+    <p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
   </section>
 
   <!-- Carousel -->
@@ -669,7 +703,7 @@
     </div>
   </section>
 
-  <footer>DeadZone · 2026</footer>
+  <footer>Made with ❤ for Minecraft · DeadZone · 2024</footer>
 </div>
 
 
@@ -887,6 +921,17 @@ Check the **Map** tab — if it's live, the server is up! Server IP will be list
     btnEdit.classList.add('active');
     btnPreview.classList.remove('active');
   });
+
+  /* ─── Hero parallax ─── */
+  const heroBg = document.getElementById('heroBg');
+  if (heroBg) {
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      // Move bg upward at 30% of scroll speed for parallax feel
+      heroBg.style.transform = `scale(1.08) translateY(${scrollY * 0.3}px)`;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
 
   // Initial render
   renderArticle('getting-started');
