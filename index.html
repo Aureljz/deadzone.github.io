@@ -133,15 +133,20 @@
     /* Parallax background image */
     .hero-bg {
       position: absolute;
-      inset: -60px; /* extra room for parallax travel */
+      inset: -60px;
       z-index: 0;
-      background-image: url("assets/background.png");
-      background-size: cover;
-      background-position: center 40%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .hero-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
       filter: blur(7px) brightness(0.28) saturate(0.8);
       transform: scale(1.08);
       will-change: transform;
-      pointer-events: none;
+      display: block;
     }
 
     /* Bottom gradient fade into page */
@@ -256,6 +261,40 @@
     }
 
     .description-section p + p { margin-top: 1em; }
+
+    .desc-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      text-align: left;
+    }
+
+    .desc-highlight {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: #ffffff06;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 4px;
+      padding: 0.85rem 1.1rem;
+      font-size: 0.97rem;
+      color: var(--sand);
+      line-height: 1.6;
+    }
+
+    .highlight-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .desc-highlight strong {
+      color: var(--parchment);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
 
     /* ══════════════════════════════
        CAROUSEL
@@ -642,20 +681,31 @@
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-bg" id="heroBg"></div>
-    <img src="assets/logo.png" alt="DeadZone Logo" style="max-width:320px;width:100%;height:auto;filter:drop-shadow(0 0 40px #cc000066);image-rendering:pixelated;" />
+    <div class="hero-bg" id="heroBg"><img src="assets/background.png" alt="" /></div>
+    <img src="assets/logo.png" alt="DeadZone Logo" style="max-width:420px;width:100%;height:auto;filter:drop-shadow(0 0 40px #cc000066);image-rendering:pixelated;" />
 
-    <h1 class="pack-title">DeadZone</h1>
-    <p class="pack-subtitle">A Minecraft Survival Horror Modpack</p>
+    <p class="pack-subtitle">Multiplayer zombie survival modpack</p>
 
     <div class="ornament"><span class="ornament-icon">◆</span></div>
   </section>
 
   <!-- Description -->
   <section class="description-section">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum et dolorum fuga.</p>
-    <p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
+    <p>DEADZONE is a multiplayer survival modpack within an apocalyptic world. The modpack is played in adventure mode and the experience is carefully crafted to promote PVP and PVE. Find settlements, gather loot and weapons, and find your way into the safezones.</p>
+    <div class="desc-highlights">
+      <div class="desc-highlight">
+        <span class="highlight-icon">🌐</span>
+        <div>
+          <strong>Official Servers.</strong> DEADZONE runs official servers using its custom map. Currently, US and EU servers are available, sponsored by Bisect Hosting.
+        </div>
+      </div>
+      <div class="desc-highlight">
+        <span class="highlight-icon">🗺</span>
+        <div>
+          <strong>Official Map.</strong> ZAREVYN is a massive 7000×7000 map built for DEADZONE by Zephyrusjz.
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Carousel -->
@@ -924,11 +974,11 @@ Check the **Map** tab — if it's live, the server is up! Server IP will be list
 
   /* ─── Hero parallax ─── */
   const heroBg = document.getElementById('heroBg');
-  if (heroBg) {
+  const heroBgImg = heroBg ? heroBg.querySelector('img') : null;
+  if (heroBgImg) {
     const onScroll = () => {
       const scrollY = window.scrollY;
-      // Move bg upward at 30% of scroll speed for parallax feel
-      heroBg.style.transform = `scale(1.08) translateY(${scrollY * 0.3}px)`;
+      heroBgImg.style.transform = `scale(1.08) translateY(${scrollY * 0.3}px)`;
     };
     window.addEventListener('scroll', onScroll, { passive: true });
   }
