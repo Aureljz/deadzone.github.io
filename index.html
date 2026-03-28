@@ -725,38 +725,6 @@
     /* Map embed slot */
     #bluemap-embed { width: 100%; height: 100%; border: none; display: none; }
 
-    /* Fullscreen overlay */
-    .map-image-wrap.fullscreen {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      max-width: none !important;
-      aspect-ratio: unset !important;
-      border-radius: 0 !important;
-      border: none !important;
-      z-index: 999 !important;
-    }
-
-    /* ESC hint when fullscreen */
-    .map-esc-hint {
-      position: fixed;
-      top: 1rem; right: 1rem;
-      font-family: 'Cinzel', serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      background: #0c0b09cc;
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 4px 10px;
-      z-index: 1000;
-      display: none;
-      pointer-events: none;
-    }
-    .map-esc-hint.visible { display: block; }
-
     /* ══════════════════════════════
        WIKI PAGE
     ══════════════════════════════ */
@@ -1085,7 +1053,7 @@
 
 <!-- ══ NAV ══ -->
 <nav>
-  <span class="nav-brand" id="navBrand" style="cursor:pointer;">⚔ DeadZone</span>
+  <span class="nav-brand">⚔ DeadZone</span>
   <ul class="nav-tabs">
     <li class="nav-tab active" data-page="home">Home</li>
     <li class="nav-tab"       data-page="map">Map</li>
@@ -1194,19 +1162,17 @@
     <!-- Map viewer -->
     <div class="map-image-wrap" id="mapImageWrap">
       <div class="map-canvas" id="mapCanvas">
-        <img src="assets/map.png" alt="" id="mapImg" draggable="false" />
+        <img src="assets/map.png" alt="Zarevyn Region Map" id="mapImg" draggable="false" />
       </div>
       <!-- Marker overlay: never transformed, always on top -->
       <div class="map-marker-layer" id="markerLayer"></div>
       <span class="map-zoom-hint">Scroll to zoom · Drag to pan</span>
     </div>
-    <div class="map-esc-hint" id="mapEscHint">Press ESC to exit fullscreen</div>
 
     <!-- Controls -->
     <div class="map-controls">
       <div class="map-controls-left">
         <button class="map-ctrl-btn" id="mapReset">Reset View</button>
-        <button class="map-ctrl-btn" id="mapFullscreen">⛶ Fullscreen</button>
       </div>
       <div class="map-controls-right">
         <a class="social-btn" href="#" target="_blank" style="text-decoration:none;">
@@ -1299,19 +1265,14 @@
   const tabs  = document.querySelectorAll('.nav-tab');
   const pages = document.querySelectorAll('.page');
 
-  function switchTab(pageId) {
-    tabs.forEach(t => t.classList.remove('active'));
-    pages.forEach(p => p.classList.remove('active'));
-    const tab = document.querySelector(`.nav-tab[data-page="${pageId}"]`);
-    if (tab) tab.classList.add('active');
-    document.getElementById('page-' + pageId)?.classList.add('active');
-  }
-
   tabs.forEach(tab => {
-    tab.addEventListener('click', () => switchTab(tab.dataset.page));
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      pages.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('page-' + tab.dataset.page).classList.add('active');
+    });
   });
-
-  document.getElementById('navBrand').addEventListener('click', () => switchTab('home'));
 
   /* ─── Carousel ─── */
   const track  = document.getElementById('carouselTrack');
@@ -1396,52 +1357,21 @@
       };
     }
 
-    // ── Zoom to pointer — with smooth lerp ──
-    let targetScale = 1, targetTx = 0, targetTy = 0;
-    let animating = false;
-
-    function animateTo() {
-      const ease = 0.14;
-      scale += (targetScale - scale) * ease;
-      tx    += (targetTx - tx) * ease;
-      ty    += (targetTy - ty) * ease;
-
-      const settled =
-        Math.abs(targetScale - scale) < 0.001 &&
-        Math.abs(targetTx - tx) < 0.1 &&
-        Math.abs(targetTy - ty) < 0.1;
-
-      if (settled) {
-        scale = targetScale; tx = targetTx; ty = targetTy;
-        animating = false;
-      }
-
-      applyTransform(false);
-      repositionMarkers();
-      if (!settled) requestAnimationFrame(animateTo);
-    }
-
-    function startAnim() {
-      if (!animating) { animating = true; requestAnimationFrame(animateTo); }
-    }
-
+    // ── Zoom to pointer ──
     wrap.addEventListener('wheel', e => {
       e.preventDefault();
-      const rect   = wrap.getBoundingClientRect();
-      const mx     = e.clientX - rect.left;
-      const my     = e.clientY - rect.top;
-      const factor = e.deltaY < 0 ? 1.18 : 0.85;
-      const ns     = clamp(targetScale * factor, MIN, MAX);
-      targetTx = mx - (mx - targetTx) * (ns / targetScale);
-      targetTy = my - (my - targetTy) * (ns / targetScale);
-      targetScale = ns;
-      if (targetScale === MIN) { targetTx = 0; targetTy = 0; }
-      else {
-        const w = wrap.clientWidth, h = wrap.clientHeight;
-        targetTx = clamp(targetTx, w - w * targetScale, 0);
-        targetTy = clamp(targetTy, h - h * targetScale, 0);
-      }
-      startAnim();
+      const rect     = wrap.getBoundingClientRect();
+      const mx       = e.clientX - rect.left;
+      const my       = e.clientY - rect.top;
+      const factor   = e.deltaY < 0 ? 1.15 : 0.87;
+      const newScale = clamp(scale * factor, MIN, MAX);
+      tx = mx - (mx - tx) * (newScale / scale);
+      ty = my - (my - ty) * (newScale / scale);
+      scale = newScale;
+      if (scale === MIN) { tx = 0; ty = 0; }
+      else clampPan();
+      applyTransform(false);
+      repositionMarkers();
     }, { passive: false });
 
     // ── Drag to pan ──
@@ -1463,40 +1393,9 @@
 
     // ── Reset ──
     document.getElementById('mapReset').addEventListener('click', () => {
-      targetScale = 1; targetTx = 0; targetTy = 0;
       scale = 1; tx = 0; ty = 0;
       applyTransform(true);
       setTimeout(repositionMarkers, 320);
-    });
-
-    // ── Fullscreen ──
-    const fsBtn  = document.getElementById('mapFullscreen');
-    const escHint = document.getElementById('mapEscHint');
-    let isFullscreen = false;
-
-    function enterFullscreen() {
-      isFullscreen = true;
-      wrap.classList.add('fullscreen');
-      escHint.classList.add('visible');
-      fsBtn.textContent = '✕ Exit Fullscreen';
-      // Recalculate pan clamps for new size
-      targetTx = clamp(targetTx, wrap.clientWidth  - wrap.clientWidth  * targetScale, 0);
-      targetTy = clamp(targetTy, wrap.clientHeight - wrap.clientHeight * targetScale, 0);
-      repositionMarkers();
-    }
-
-    function exitFullscreen() {
-      isFullscreen = false;
-      wrap.classList.remove('fullscreen');
-      escHint.classList.remove('visible');
-      fsBtn.textContent = '⛶ Fullscreen';
-      repositionMarkers();
-    }
-
-    fsBtn.addEventListener('click', () => isFullscreen ? exitFullscreen() : enterFullscreen());
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && isFullscreen) exitFullscreen();
     });
 
     // ── Marker types ──
