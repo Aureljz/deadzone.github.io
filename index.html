@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-9J7X7SE8GZ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-9J7X7SE8GZ');
-</script>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DeadZone — Home</title>
   <link rel="icon" type="image/png" href="assets/favicon.png">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9J7X7SE8GZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-9J7X7SE8GZ');
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
@@ -735,6 +733,38 @@
     /* Map embed slot */
     #bluemap-embed { width: 100%; height: 100%; border: none; display: none; }
 
+    /* Fullscreen overlay */
+    .map-image-wrap.fullscreen {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: none !important;
+      aspect-ratio: unset !important;
+      border-radius: 0 !important;
+      border: none !important;
+      z-index: 999 !important;
+    }
+
+    /* ESC hint when fullscreen */
+    .map-esc-hint {
+      position: fixed;
+      top: 1rem; right: 1rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: #0c0b09cc;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 4px 10px;
+      z-index: 1000;
+      display: none;
+      pointer-events: none;
+    }
+    .map-esc-hint.visible { display: block; }
+
     /* ══════════════════════════════
        WIKI PAGE
     ══════════════════════════════ */
@@ -1063,7 +1093,7 @@
 
 <!-- ══ NAV ══ -->
 <nav>
-  <span class="nav-brand">DeadZone</span>
+  <span class="nav-brand" id="navBrand" style="cursor:pointer;">DeadZone</span>
   <ul class="nav-tabs">
     <li class="nav-tab active" data-page="home">Home</li>
     <li class="nav-tab"       data-page="map">Map</li>
@@ -1172,17 +1202,19 @@
     <!-- Map viewer -->
     <div class="map-image-wrap" id="mapImageWrap">
       <div class="map-canvas" id="mapCanvas">
-        <img src="assets/map.png" alt="Zarevyn Region Map" id="mapImg" draggable="false" />
+        <img src="assets/map.png" alt="" id="mapImg" draggable="false" />
       </div>
       <!-- Marker overlay: never transformed, always on top -->
       <div class="map-marker-layer" id="markerLayer"></div>
       <span class="map-zoom-hint">Scroll to zoom · Drag to pan</span>
     </div>
+    <div class="map-esc-hint" id="mapEscHint">Press ESC to exit fullscreen</div>
 
     <!-- Controls -->
     <div class="map-controls">
       <div class="map-controls-left">
         <button class="map-ctrl-btn" id="mapReset">Reset View</button>
+        <button class="map-ctrl-btn" id="mapFullscreen">⛶ Fullscreen</button>
       </div>
       <div class="map-controls-right">
         <a class="social-btn" href="#" target="_blank" style="text-decoration:none;">
@@ -1275,14 +1307,19 @@
   const tabs  = document.querySelectorAll('.nav-tab');
   const pages = document.querySelectorAll('.page');
 
+  function switchTab(pageId) {
+    tabs.forEach(t => t.classList.remove('active'));
+    pages.forEach(p => p.classList.remove('active'));
+    const tab = document.querySelector(`.nav-tab[data-page="${pageId}"]`);
+    if (tab) tab.classList.add('active');
+    document.getElementById('page-' + pageId)?.classList.add('active');
+  }
+
   tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      pages.forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById('page-' + tab.dataset.page).classList.add('active');
-    });
+    tab.addEventListener('click', () => switchTab(tab.dataset.page));
   });
+
+  document.getElementById('navBrand').addEventListener('click', () => switchTab('home'));
 
   /* ─── Carousel ─── */
   const track  = document.getElementById('carouselTrack');
@@ -1367,45 +1404,178 @@
       };
     }
 
-    // ── Zoom to pointer ──
-    wrap.addEventListener('wheel', e => {
-      e.preventDefault();
-      const rect     = wrap.getBoundingClientRect();
-      const mx       = e.clientX - rect.left;
-      const my       = e.clientY - rect.top;
-      const factor   = e.deltaY < 0 ? 1.15 : 0.87;
-      const newScale = clamp(scale * factor, MIN, MAX);
-      tx = mx - (mx - tx) * (newScale / scale);
-      ty = my - (my - ty) * (newScale / scale);
-      scale = newScale;
-      if (scale === MIN) { tx = 0; ty = 0; }
-      else clampPan();
+    // ── Zoom to pointer — with smooth lerp ──
+    let targetScale = 1, targetTx = 0, targetTy = 0;
+    let animating = false;
+
+    function animateTo() {
+      const ease = 0.14;
+      scale += (targetScale - scale) * ease;
+      tx    += (targetTx - tx) * ease;
+      ty    += (targetTy - ty) * ease;
+
+      const settled =
+        Math.abs(targetScale - scale) < 0.001 &&
+        Math.abs(targetTx - tx) < 0.1 &&
+        Math.abs(targetTy - ty) < 0.1;
+
+      if (settled) {
+        scale = targetScale; tx = targetTx; ty = targetTy;
+        animating = false;
+      }
+
       applyTransform(false);
       repositionMarkers();
+      if (!settled) requestAnimationFrame(animateTo);
+    }
+
+    function startAnim() {
+      if (!animating) { animating = true; requestAnimationFrame(animateTo); }
+    }
+
+    wrap.addEventListener('wheel', e => {
+      e.preventDefault();
+      const rect   = wrap.getBoundingClientRect();
+      const mx     = e.clientX - rect.left;
+      const my     = e.clientY - rect.top;
+      const factor = e.deltaY < 0 ? 1.18 : 0.85;
+      const ns     = clamp(targetScale * factor, MIN, MAX);
+      targetTx = mx - (mx - targetTx) * (ns / targetScale);
+      targetTy = my - (my - targetTy) * (ns / targetScale);
+      targetScale = ns;
+      if (targetScale === MIN) { targetTx = 0; targetTy = 0; }
+      else {
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        targetTx = clamp(targetTx, w - w * targetScale, 0);
+        targetTy = clamp(targetTy, h - h * targetScale, 0);
+      }
+      startAnim();
     }, { passive: false });
 
-    // ── Drag to pan ──
+    // ── Drag to pan (mouse) ──
     wrap.addEventListener('mousedown', e => {
       if (placing) return;
       dragging = true;
       dragStartX = e.clientX; dragStartY = e.clientY;
+      // Sync targets to current position so animation doesn't fight the drag
       lastTx = tx; lastTy = ty;
+      targetTx = tx; targetTy = ty; targetScale = scale;
     });
     window.addEventListener('mousemove', e => {
       if (!dragging) return;
       tx = lastTx + (e.clientX - dragStartX);
       ty = lastTy + (e.clientY - dragStartY);
       clampPan();
+      // Keep targets in sync so releasing doesn't snap
+      targetTx = tx; targetTy = ty;
       applyTransform(false);
       repositionMarkers();
     });
     window.addEventListener('mouseup', () => { dragging = false; });
 
+    // ── Touch support (mobile pan + pinch zoom) ──
+    let lastTouchDist = null;
+    let touchStartX = 0, touchStartY = 0;
+    let touchLastTx = 0, touchLastTy = 0;
+
+    wrap.addEventListener('touchstart', e => {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        // Single finger — pan
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchLastTx = tx; touchLastTy = ty;
+        targetTx = tx; targetTy = ty; targetScale = scale;
+        lastTouchDist = null;
+      } else if (e.touches.length === 2) {
+        // Two fingers — pinch
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        lastTouchDist = Math.hypot(dx, dy);
+      }
+    }, { passive: false });
+
+    wrap.addEventListener('touchmove', e => {
+      e.preventDefault();
+      if (e.touches.length === 1 && lastTouchDist === null) {
+        // Pan
+        const dx = e.touches[0].clientX - touchStartX;
+        const dy = e.touches[0].clientY - touchStartY;
+        tx = touchLastTx + dx;
+        ty = touchLastTy + dy;
+        clampPan();
+        targetTx = tx; targetTy = ty;
+        applyTransform(false);
+        repositionMarkers();
+      } else if (e.touches.length === 2) {
+        // Pinch zoom
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.hypot(dx, dy);
+        if (lastTouchDist === null) { lastTouchDist = dist; return; }
+        const factor = dist / lastTouchDist;
+        lastTouchDist = dist;
+        // Zoom around pinch midpoint
+        const rect  = wrap.getBoundingClientRect();
+        const mx    = ((e.touches[0].clientX + e.touches[1].clientX) / 2) - rect.left;
+        const my    = ((e.touches[0].clientY + e.touches[1].clientY) / 2) - rect.top;
+        const ns    = clamp(scale * factor, MIN, MAX);
+        tx = mx - (mx - tx) * (ns / scale);
+        ty = my - (my - ty) * (ns / scale);
+        scale = ns;
+        clampPan();
+        targetTx = tx; targetTy = ty; targetScale = scale;
+        applyTransform(false);
+        repositionMarkers();
+      }
+    }, { passive: false });
+
+    wrap.addEventListener('touchend', e => {
+      if (e.touches.length < 2) lastTouchDist = null;
+    });
+
     // ── Reset ──
     document.getElementById('mapReset').addEventListener('click', () => {
+      targetScale = 1; targetTx = 0; targetTy = 0;
       scale = 1; tx = 0; ty = 0;
       applyTransform(true);
       setTimeout(repositionMarkers, 320);
+    });
+
+    // ── Fullscreen ──
+    const fsBtn   = document.getElementById('mapFullscreen');
+    const escHint = document.getElementById('mapEscHint');
+    let isFullscreen = false;
+
+    function enterFullscreen() {
+      isFullscreen = true;
+      wrap.classList.add('fullscreen');
+      escHint.classList.add('visible');
+      fsBtn.textContent = '✕ Exit Fullscreen';
+      // Re-clamp after size change
+      setTimeout(() => {
+        clampPan();
+        targetTx = tx; targetTy = ty;
+        repositionMarkers();
+      }, 50);
+    }
+
+    function exitFullscreen() {
+      isFullscreen = false;
+      wrap.classList.remove('fullscreen');
+      escHint.classList.remove('visible');
+      fsBtn.textContent = '⛶ Fullscreen';
+      setTimeout(() => {
+        clampPan();
+        targetTx = tx; targetTy = ty;
+        repositionMarkers();
+      }, 50);
+    }
+
+    fsBtn.addEventListener('click', () => isFullscreen ? exitFullscreen() : enterFullscreen());
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && isFullscreen) exitFullscreen();
     });
 
     // ── Marker types ──
