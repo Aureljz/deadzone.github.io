@@ -115,63 +115,65 @@
     }
 
     /* ══════════════════════════════
-       HOME — HERO
+       HOME — HERO + DESCRIPTION WRAPPER
     ══════════════════════════════ */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 6rem 2rem 5rem;
-      text-align: center;
+
+    /* Shared wrapper so the bg spans hero AND description */
+    .hero-wrapper {
       position: relative;
-      gap: 1.5rem;
       overflow: hidden;
-      min-height: 600px;
     }
 
-    /* Parallax background image */
+    /* The parallax image — absolutely fills the entire wrapper */
     .hero-bg {
       position: absolute;
-      inset: -60px;
+      inset: -60px 0;          /* vertical overshoot for parallax travel */
       z-index: 0;
-      overflow: hidden;
       pointer-events: none;
     }
 
     .hero-bg img {
       width: 100%; height: 100%;
       object-fit: cover;
-      object-position: center 40%;
-      filter: blur(7px) brightness(0.28) saturate(0.8);
-      transform: scale(1.08);
-      will-change: transform;
+      object-position: center 30%;
+      filter: blur(7px) brightness(0.25) saturate(0.75);
       display: block;
+      will-change: transform;
     }
 
-    /* Bottom gradient fade into page */
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 180px;
-      background: linear-gradient(to bottom, transparent 0%, var(--bedrock) 100%);
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    /* Radial red glow overlay */
-    .hero::before {
+    /* Gradient overlays:
+       - top: subtle dark vignette
+       - bottom: full fade to bedrock at the very end of the description */
+    .hero-bg::before {
       content: '';
       position: absolute;
       inset: 0; z-index: 1;
       background:
-        radial-gradient(ellipse 70% 50% at 50% 30%, #cc000022 0%, transparent 70%),
-        radial-gradient(ellipse 100% 60% at 50% 100%, #0c0b09aa 0%, transparent 80%);
+        radial-gradient(ellipse 80% 50% at 50% 20%, #cc000018 0%, transparent 65%),
+        linear-gradient(to bottom,
+          #0c0b0966 0%,
+          transparent 25%,
+          transparent 55%,
+          #0c0b09dd 80%,
+          #0c0b09 100%
+        );
       pointer-events: none;
     }
 
-    /* All direct hero children sit above bg layers */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem 3rem;
+      text-align: center;
+      position: relative;
+      gap: 1.5rem;
+      z-index: 1;
+      min-height: 520px;
+    }
+
+    /* All direct hero children sit above bg */
     .hero > * { position: relative; z-index: 2; }
 
     .logo-box {
@@ -253,11 +255,13 @@
     /* ── Description ── */
     .description-section {
       max-width: 760px; margin: 0 auto;
-      padding: 0 2rem 3rem;
+      padding: 0 2rem 4rem;
       text-align: center;
       line-height: 1.8;
       color: var(--sand);
       font-size: 1.05rem;
+      position: relative;
+      z-index: 1;
     }
 
     .description-section p + p { margin-top: 1em; }
@@ -679,34 +683,37 @@
 ════════════════════════════ -->
 <div id="page-home" class="page active">
 
-  <!-- Hero -->
-  <section class="hero">
+  <!-- Hero + Description share one background wrapper -->
+  <div class="hero-wrapper">
     <div class="hero-bg" id="heroBg"><img src="assets/background.png" alt="" /></div>
-    <img src="assets/logo.png" alt="DeadZone Logo" style="max-width:420px;width:100%;height:auto;filter:drop-shadow(0 0 40px #cc000066);image-rendering:pixelated;" />
 
-    <p class="pack-subtitle">Multiplayer zombie survival modpack</p>
+    <!-- Hero -->
+    <section class="hero">
+      <img src="assets/logo.png" alt="DeadZone Logo" style="max-width:420px;width:100%;height:auto;filter:drop-shadow(0 0 40px #cc000066);image-rendering:pixelated;" />
+      <p class="pack-subtitle">A Minecraft Survival Horror Modpack</p>
+      <div class="ornament"><span class="ornament-icon">◆</span></div>
+    </section>
 
-    <div class="ornament"><span class="ornament-icon">◆</span></div>
-  </section>
-
-  <!-- Description -->
-  <section class="description-section">
-    <p>DEADZONE is a multiplayer survival modpack within an apocalyptic world. The modpack is played in adventure mode and the experience is carefully crafted to promote PVP and PVE. Find settlements, gather loot and weapons, and find your way into the safezones.</p>
-    <div class="desc-highlights">
-      <div class="desc-highlight">
-        <span class="highlight-icon">🌐</span>
-        <div>
-          <strong>Official Servers.</strong> DEADZONE runs official servers using its custom map. Currently, US and EU servers are available, sponsored by Bisect Hosting.
+    <!-- Description -->
+    <section class="description-section">
+      <p>DEADZONE is a multiplayer survival modpack within an apocalyptic world. The modpack is played in adventure mode and the experience is carefully crafted to promote PVP and PVE. Find settlements, gather loot and weapons, and find your way into the safezones.</p>
+      <div class="desc-highlights">
+        <div class="desc-highlight">
+          <span class="highlight-icon">🌐</span>
+          <div>
+            <strong>Official Servers.</strong> DEADZONE runs official servers using its custom map. Currently, US and EU servers are available, sponsored by Bisect Hosting.
+          </div>
+        </div>
+        <div class="desc-highlight">
+          <span class="highlight-icon">🗺</span>
+          <div>
+            <strong>Official Map.</strong> ZAREVYN is a massive 7000×7000 map built for DEADZONE by Zephyrusjz.
+          </div>
         </div>
       </div>
-      <div class="desc-highlight">
-        <span class="highlight-icon">🗺</span>
-        <div>
-          <strong>Official Map.</strong> ZAREVYN is a massive 7000×7000 map built for DEADZONE by Zephyrusjz.
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
+
+  </div><!-- end .hero-wrapper -->
 
   <!-- Carousel -->
   <section class="carousel-section">
@@ -973,12 +980,11 @@ Check the **Map** tab — if it's live, the server is up! Server IP will be list
   });
 
   /* ─── Hero parallax ─── */
-  const heroBg = document.getElementById('heroBg');
-  const heroBgImg = heroBg ? heroBg.querySelector('img') : null;
+  const heroBgImg = document.querySelector('#heroBg img');
   if (heroBgImg) {
     const onScroll = () => {
       const scrollY = window.scrollY;
-      heroBgImg.style.transform = `scale(1.08) translateY(${scrollY * 0.3}px)`;
+      heroBgImg.style.transform = `translateY(${scrollY * 0.25}px)`;
     };
     window.addEventListener('scroll', onScroll, { passive: true });
   }
