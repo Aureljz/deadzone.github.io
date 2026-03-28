@@ -457,7 +457,7 @@
     }
 
     .map-region-header {
-      width: 100%; max-width: 900px;
+      width: 100%; max-width: min(90vw, 88vh);
       padding: 2rem 0 1.2rem;
       text-align: left;
       border-bottom: 1px solid var(--border);
@@ -493,7 +493,7 @@
 
     /* Map viewer container — clips the panned/zoomed canvas */
     .map-image-wrap {
-      width: 100%; max-width: 75vh; /* square: width capped to viewport height */
+      width: min(90vw, 88vh); /* as big as possible while keeping it square and on-screen */
       aspect-ratio: 1 / 1;
       position: relative;
       border: 2px solid var(--border);
@@ -633,8 +633,7 @@
       margin-top: 0.75rem;
       justify-content: space-between;
       align-items: center;
-      width: 100%;
-      max-width: 900px;
+      width: min(90vw, 88vh);
       flex-wrap: wrap;
     }
 
@@ -661,7 +660,7 @@
     /* Marker editor panel */
     .marker-editor {
       display: none;
-      width: 100%; max-width: 900px;
+      width: min(90vw, 88vh);
       margin-top: 0.75rem;
       background: var(--stone);
       border: 1px solid var(--border);
@@ -705,7 +704,7 @@
     /* Export output */
     .marker-export {
       display: none;
-      width: 100%; max-width: 900px;
+      width: min(90vw, 88vh);
       margin-top: 0.5rem;
     }
     .marker-export textarea {
@@ -1396,7 +1395,52 @@ Check the **Map** tab — if it's live, the server is up! Server IP will be list
       {"id":7,"nx":0.4346473029045643,"ny":0.37012446866490534,"name":"Northern Safezone","desc":"","type":"safezone"},
       {"id":8,"nx":0.6483402489626556,"ny":0.6585062114034945,"name":"Southern Safezone","desc":"","type":"safezone"},
       {"id":10,"nx":0.06742738589211618,"ny":0.45933608692216676,"name":"Ruined Castle","desc":"","type":"military"},
-      {"id":11,"nx":0.8246887966804979,"ny":0.8390041367146979,"name":"Zapretinsk","desc":"","type":"city"}
+      {"id":15,"nx":0.8386063800244232,"ny":0.1589453745696504,"name":"Black Market","desc":"","type":"danger"},
+      {"id":18,"nx":0.12636487869519375,"ny":0.3520041855577991,"name":"The Spire","desc":"A mysterious military tower for radio communication.","type":"military"},
+      {"id":23,"nx":0.8660162798243025,"ny":0.7766263596163123,"name":"Military Camp","desc":"A military roadblock in the road to Korska.","type":"military"},
+      {"id":24,"nx":0.8417952098644401,"ny":0.755784009817961,"name":"Hillside Vault","desc":"A small military vault.","type":"military"},
+      {"id":27,"nx":0.40572408884636235,"ny":0.8210202591310259,"name":"VAULT-A4","desc":"A dangerous, maze-like military vault.","type":"danger"},
+      {"id":28,"nx":0.8062393331783051,"ny":0.5948630849727495,"name":"Pirov","desc":"A small town south of Korska.","type":"city"},
+      {"id":32,"nx":0.40245164427621105,"ny":0.900363239420026,"name":"Southern Factory","desc":"A small factory.","type":"city"},
+      {"id":35,"nx":0.48471237905840325,"ny":0.8696048777188585,"name":"Industrial Complex","desc":"Several industrial buildings.","type":"city"},
+      {"id":38,"nx":0.5891047310330424,"ny":0.8205087781966885,"name":"Volgorev","desc":"A town on top of a hill, overlooking the countryside.","type":"city"},
+      {"id":39,"nx":0.5006122164031841,"ny":0.29375879291230234,"name":"Construction Site","desc":"An abandoned construction site in military area.","type":"city"},
+      {"id":42,"nx":0.4885203159039562,"ny":0.7230115595161861,"name":"Broken Bridge","desc":"A ruined bridge between towns.","type":"city"},
+      {"id":46,"nx":0.5960960474665974,"ny":0.9176864637989087,"name":"Town","desc":"","type":"city"},
+      {"id":47,"nx":0.6817545548446466,"ny":0.7608792568480999,"name":"Town","desc":"","type":"city"},
+      {"id":48,"nx":0.6678144928895373,"ny":0.6973670540792677,"name":"Town","desc":"","type":"city"},
+      {"id":49,"nx":0.6641488341275623,"ny":0.8232409513283725,"name":"Town","desc":"","type":"city"},
+      {"id":50,"nx":0.7113121676608016,"ny":0.8325306988424954,"name":"Town","desc":"","type":"city"},
+      {"id":51,"nx":0.7098829757355519,"ny":0.8932713556656067,"name":"Town","desc":"","type":"city"},
+      {"id":52,"nx":0.3656241079935178,"ny":0.8306216799610195,"name":"Town","desc":"","type":"city"},
+      {"id":53,"nx":0.31768148237290406,"ny":0.7932637898670347,"name":"Town","desc":"","type":"city"},
+      {"id":54,"nx":0.4857653521574883,"ny":0.6539907528246733,"name":"Town","desc":"","type":"city"},
+      {"id":55,"nx":0.2492674988708896,"ny":0.8067774311643452,"name":"Town","desc":"","type":"city"},
+      {"id":57,"nx":0.7852009129186055,"ny":0.8863938340990806,"name":"Stable","desc":"A small stable.","type":"city"},
+      {"id":60,"nx":0.8221853198508935,"ny":0.8395144654595161,"name":"Zapretinsk","desc":"A mayor southern town known for gang activity.","type":"city"},
+      {"id":61,"nx":0.7834422260304813,"ny":0.8644165647153127,"name":"Storehouse","desc":"","type":"city"},
+      {"id":64,"nx":0.9062216802697467,"ny":0.9332526139642762,"name":"Hunter Cabins","desc":"","type":"city"},
+      {"id":65,"nx":0.9149080577505425,"ny":0.8829947111249352,"name":"Hunter Cabins","desc":"","type":"city"},
+      {"id":66,"nx":0.3072087564757902,"ny":0.9364788057340342,"name":"Hunter Cabins","desc":"","type":"city"},
+      {"id":67,"nx":0.3970233678748939,"ny":0.5739171370852387,"name":"Town","desc":"","type":"city"},
+      {"id":68,"nx":0.3102999415514944,"ny":0.6470146624302308,"name":"Town","desc":"","type":"city"},
+      {"id":69,"nx":0.26719874940756516,"ny":0.5974065072143357,"name":"Town","desc":"","type":"city"},
+      {"id":70,"nx":0.11282455120316488,"ny":0.5466995104304451,"name":"Military Campsite","desc":"A military campsite south of the castle ruins.","type":"military"},
+      {"id":72,"nx":0.7581216201768528,"ny":0.751315328973306,"name":"Town","desc":"","type":"city"},
+      {"id":75,"nx":0.6414780522858997,"ny":0.7705923957818793,"name":"Residential Buildings","desc":"Two buildings bearing a frightening message: \"Not safe\"","type":"city"},
+      {"id":77,"nx":0.5928061046150114,"ny":0.5344081191172169,"name":"Town","desc":"It is said to be the first settlement in Zarevyn.","type":"city"},
+      {"id":78,"nx":0.9280274333495333,"ny":0.37557364748032507,"name":"Korska Harbour","desc":"A civilian harbour with military connections.","type":"danger"},
+      {"id":79,"nx":0.9513534011577177,"ny":0.32429724639375684,"name":"Cargo Ship","desc":"An abandoned cargo ship, rumoured to carry military equipment.","type":"military"},
+      {"id":81,"nx":0.6965879242446874,"ny":0.6164825461428662,"name":"Gas Station","desc":"","type":"city"},
+      {"id":82,"nx":0.3550482991193899,"ny":0.8674781961794095,"name":"Gas Station","desc":"","type":"city"},
+      {"id":83,"nx":0.375892859134845,"ny":0.6496239296463512,"name":"Gas Station","desc":"","type":"city"},
+      {"id":84,"nx":0.25842800111445036,"ny":0.6223430637469455,"name":"Residential Buildings","desc":"","type":"city"},
+      {"id":85,"nx":0.6218539255654199,"ny":0.5593190126611697,"name":"Barn","desc":"","type":"city"},
+      {"id":87,"nx":0.5848234116431967,"ny":0.7619958674400303,"name":"Farmhouse","desc":"","type":"city"},
+      {"id":88,"nx":0.8918969998486326,"ny":0.5335450459918715,"name":"Military Campsite","desc":"A small military campsite in the outskirts of Korska.","type":"military"},
+      {"id":89,"nx":0.510611225546964,"ny":0.7369118626985314,"name":"Town","desc":"A riverside town south of the broken bridge.","type":"city"},
+      {"id":90,"nx":0.34568754019769243,"ny":0.9710435390823929,"name":"Lighthouse","desc":"","type":"city"},
+      {"id":92,"nx":0.18611684583845223,"ny":0.24388516732840834,"name":"Dam","desc":"","type":"city"}
     ];
     let markerIdSeq = Math.max(...markers.map(m => m.id), 0);
 
