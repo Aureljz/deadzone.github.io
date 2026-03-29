@@ -738,16 +738,35 @@
     /* Map embed slot */
     #bluemap-embed { width: 100%; height: 100%; border: none; display: none; }
 
-    /* Fullscreen overlay */
+    /* Fullscreen backdrop — covers screen, map stays square on top */
+    .map-fullscreen-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 998;
+      background: url('assets/background.png') center/cover no-repeat;
+    }
+    .map-fullscreen-backdrop::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(12px) brightness(0.25) saturate(0.7);
+      background: #0c0b09aa;
+    }
+    .map-fullscreen-backdrop.visible { display: block; }
+
+    /* Map goes on top of backdrop, centered, stays square */
     .map-image-wrap.fullscreen {
       position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      /* Keep the same square size — use the smaller viewport dimension */
+      width: min(96vh, 96vw) !important;
+      height: min(96vh, 96vw) !important;
+      aspect-ratio: 1 / 1 !important;
       max-width: none !important;
-      aspect-ratio: unset !important;
-      border-radius: 0 !important;
-      border: none !important;
+      border-radius: 6px !important;
       z-index: 999 !important;
     }
 
@@ -1214,6 +1233,7 @@
       <span class="map-zoom-hint">Scroll to zoom · Drag to pan</span>
     </div>
     <div class="map-esc-hint" id="mapEscHint">Press ESC to exit fullscreen</div>
+    <div class="map-fullscreen-backdrop" id="mapBackdrop"></div>
 
     <!-- Controls -->
     <div class="map-controls">
@@ -1549,16 +1569,18 @@
     });
 
     // ── Fullscreen ──
-    const fsBtn   = document.getElementById('mapFullscreen');
-    const escHint = document.getElementById('mapEscHint');
+    const fsBtn      = document.getElementById('mapFullscreen');
+    const escHint    = document.getElementById('mapEscHint');
+    const backdrop   = document.getElementById('mapBackdrop');
     let isFullscreen = false;
 
     function enterFullscreen() {
       isFullscreen = true;
+      backdrop.classList.add('visible');
       wrap.classList.add('fullscreen');
       escHint.classList.add('visible');
       fsBtn.textContent = '✕ Exit Fullscreen';
-      // Re-clamp after size change
+      // Re-clamp after size settles (wrap is now bigger)
       setTimeout(() => {
         clampPan();
         targetTx = tx; targetTy = ty;
@@ -1568,6 +1590,7 @@
 
     function exitFullscreen() {
       isFullscreen = false;
+      backdrop.classList.remove('visible');
       wrap.classList.remove('fullscreen');
       escHint.classList.remove('visible');
       fsBtn.textContent = '⛶ Fullscreen';
