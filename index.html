@@ -15,6 +15,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Share+Tech+Mono&family=Inter:wght@400;500&family=Barlow+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
   <!-- Marked.js for Markdown rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -1111,6 +1112,548 @@
 
     .tag-online { color: #4caf50; border-color: #4caf5044; background: #4caf5010; }
 
+
+    /* ══════════════════════════════
+       GUIDES PAGE
+    ══════════════════════════════ */
+#page-guides *, #page-guides *::before, #page-guides *::after { box-sizing: border-box; margin: 0; padding: 0; }
+#page-guides {
+      --red: #9a2a20;
+      --red-dim: rgba(154,42,32,0.22);
+      --red-glow: rgba(154,42,32,0.45);
+      --surface: rgba(16,18,16,0.88);
+      --surface-hover: rgba(22,24,20,0.94);
+      --border: rgba(80,88,74,0.22);
+      --border-top: rgba(100,108,90,0.40);
+      --text: #c8ccc0;
+      --text-bright: #e0e4d8;
+      --muted: #7a8070;
+      --accent: #9a2a20;
+    }
+#page-guides {
+      min-height: 100vh;
+      background: #0a0c09;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+#page-guides .bg-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+#page-guides .bg-photo {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 60%;
+      filter: blur(3px) grayscale(0.75) brightness(0.38) contrast(1.1) saturate(0.4);
+      transform: scale(1.04);
+    }
+#page-guides .bg-overlay {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to bottom,
+          rgba(12,2,2,0.45) 0%,
+          rgba(10,2,2,0.62) 30%,
+          rgba(8,1,1,0.86) 65%,
+          rgba(5,7,5,0.97) 100%
+        );
+    }
+#page-guides .g-inner { position: relative; z-index: 1; }
+#page-guides header {
+      padding: 80px 40px 56px 7%;
+      text-align: left;
+    }
+#page-guides .header-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      color: #9a2a20;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+#page-guides header h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #dde2d8;
+      line-height: 1;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+    }
+#page-guides header h1 span { color: #9a2a20; }
+#page-guides .header-sub {
+      margin-top: 14px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      color: #626860;
+      letter-spacing: 0.1em;
+    }
+#page-guides .header-divider {
+      width: 90px; height: 2px;
+      background: linear-gradient(to right, #9a2a20, #7a8274, transparent);
+      margin: 22px 0 0;
+    }
+#page-guides .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 18px;
+      max-width: 1300px;
+      margin: 0 0 0 5%;
+      padding: 0 40px 80px 60px;
+    }
+#page-guides .card {
+      background: rgba(14,16,13,0.88);
+      border: 1px solid rgba(160, 40, 30, 0.22);
+      border-top: 1px solid rgba(180, 50, 40, 0.45);
+      border-radius: 3px;
+      padding: 20px;
+      display: flex; flex-direction: column; gap: 18px;
+      position: relative;
+      backdrop-filter: blur(5px);
+      transition: border-color 0.2s, background 0.2s;
+    }
+#page-guides .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(154,42,32,0.65), transparent);
+    }
+#page-guides .card:hover {
+      background: rgba(20,22,18,0.94);
+      border-color: rgba(180, 50, 40, 0.50);
+    }
+#page-guides .card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 12px; height: 12px;
+      border-bottom: 1px solid rgba(154,42,32,0.5);
+      border-right: 1px solid rgba(154,42,32,0.5);
+      border-radius: 0 0 2px 0;
+    }
+#page-guides .card-header { display: flex; align-items: center; gap: 12px; }
+#page-guides .card-icon {
+      width: 42px; height: 42px;
+      border-radius: 3px;
+      background: rgba(22,26,20,0.9);
+      border: 1px solid rgba(160, 40, 30, 0.35);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+#page-guides .card-icon .item-img { width: 32px; height: 32px; }
+#page-guides .card-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.92rem; font-weight: 500;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: #dde2d8; line-height: 1.2;
+    }
+#page-guides .card-mod {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.62rem; color: #9a2a20;
+      letter-spacing: 0.1em; margin-top: 3px;
+      text-transform: uppercase;
+    }
+#page-guides .craft-wrap { display: flex; align-items: center; gap: 14px; }
+#page-guides .craft-grid {
+      display: grid; gap: 2px; flex-shrink: 0;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(140, 35, 28, 0.28);
+      border-radius: 3px; padding: 4px;
+    }
+#page-guides .craft-grid.g3 { grid-template-columns: repeat(3, 44px); }
+#page-guides .craft-grid.g2 { grid-template-columns: repeat(2, 44px); }
+#page-guides .cell {
+      width: 44px; height: 44px; border-radius: 2px;
+      background: rgba(18,20,16,0.92);
+      border: 1px solid rgba(120, 30, 24, 0.22);
+      display: flex; align-items: center; justify-content: center;
+      cursor: default; transition: background 0.15s, border-color 0.15s;
+      position: relative;
+    }
+#page-guides .cell .item-img { width: 32px; height: 32px; }
+#page-guides .cell:not(.empty):hover {
+      background: rgba(36, 10, 10, 0.95);
+      border-color: rgba(192, 48, 42, 0.55);
+    }
+#page-guides .cell.empty { opacity: 0.15; }
+#page-guides .cell[data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute; bottom: calc(100% + 7px);
+      left: 50%; transform: translateX(-50%);
+      background: rgba(10,12,9,0.97);
+      border: 1px solid rgba(154,42,32,0.45);
+      color: #d4d9ce;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.63rem; letter-spacing: 0.06em;
+      white-space: nowrap; padding: 4px 8px;
+      border-radius: 2px; pointer-events: none;
+      z-index: 10; text-transform: uppercase;
+    }
+#page-guides .arrow {
+      color: #9a2a20; font-size: 1.2rem;
+      flex-shrink: 0; opacity: 0.85;
+    }
+#page-guides .output-cell {
+      width: 58px; height: 58px; border-radius: 3px;
+      background: rgba(18,20,16,0.96);
+      border: 1px solid rgba(100,108,90,0.45);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 3px;
+      flex-shrink: 0; position: relative;
+    }
+#page-guides .output-cell::before {
+      content: ''; position: absolute; inset: 0; border-radius: 3px;
+      box-shadow: inset 0 0 14px rgba(154,42,32,0.10);
+    }
+#page-guides .output-cell .item-img { width: 32px; height: 32px; }
+#page-guides .output-cell .count {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.58rem; color: #9a2a20; font-weight: 600; letter-spacing: 0.05em;
+    }
+#page-guides .legend {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      border-top: 1px solid rgba(100,32,24,0.2);
+      padding-top: 14px;
+    }
+#page-guides .legend-item {
+      display: flex; align-items: center; gap: 5px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #7a8274;
+      background: rgba(18,20,16,0.75);
+      border: 1px solid rgba(100,32,24,0.22);
+      border-radius: 2px; padding: 3px 7px;
+    }
+#page-guides .legend-item .item-img { width: 16px; height: 16px; }
+#page-guides .mining-section {
+      max-width: 1300px;
+      margin: 0 0 0 5%;
+      padding: 0 40px 80px 60px;
+    }
+#page-guides .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+#page-guides .section-divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(154,42,32,0.5), transparent);
+    }
+#page-guides .section-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #dde2d8;
+      text-align: center;
+    }
+#page-guides .section-title span { color: #9a2a20; }
+#page-guides .section-eyebrow {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.28em;
+      color: #9a2a20;
+      text-transform: uppercase;
+      text-align: left;
+      margin-bottom: 12px;
+    }
+#page-guides .mining-intro {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.78rem;
+      color: #7a8274;
+      letter-spacing: 0.06em;
+      text-align: left;
+      max-width: 680px;
+      margin: 12px 0 48px;
+      line-height: 1.7;
+      text-align: left;
+    }
+#page-guides .mining-intro strong { color: #9a2a20; }
+#page-guides .ore-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+#page-guides .ore-card {
+      background: rgba(14,16,13,0.88);
+      border: 1px solid rgba(120,36,28,0.22);
+      border-top: 1px solid rgba(140,44,34,0.45);
+      border-radius: 3px;
+      padding: 20px;
+      backdrop-filter: blur(5px);
+      position: relative;
+    }
+#page-guides .ore-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(154,42,32,0.65), transparent);
+    }
+#page-guides .ore-card-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 14px;
+    }
+#page-guides .ore-icon {
+      width: 48px; height: 48px;
+      border-radius: 3px;
+      background: rgba(22,26,20,0.9);
+      border: 1px solid rgba(120,36,28,0.35);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+#page-guides .ore-icon .item-img { width: 32px; height: 32px; }
+#page-guides .ore-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.05rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: #dde2d8;
+    }
+#page-guides .ore-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem; color: #9a2a20;
+      letter-spacing: 0.1em; margin-top: 3px;
+      text-transform: uppercase;
+    }
+#page-guides .ore-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem; color: #7a8274;
+      line-height: 1.65;
+    }
+#page-guides .ore-desc strong { color: #d4d9ce; }
+#page-guides .pickaxe-banner {
+      background: rgba(14,16,13,0.88);
+      border: 1px solid rgba(154,42,32,0.35);
+      border-radius: 3px;
+      padding: 16px 22px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 48px;
+      backdrop-filter: blur(5px);
+    }
+#page-guides .pickaxe-banner .item-img { width: 32px; height: 32px; flex-shrink: 0; }
+    #page-guides .pickaxe-banner svg { width: 36px; height: 36px; flex-shrink: 0; }
+#page-guides .pickaxe-banner-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem; color: #7a8274;
+      letter-spacing: 0.05em; line-height: 1.6;
+      text-transform: uppercase;
+    }
+#page-guides .pickaxe-banner-text strong { color: #9a2a20; }
+#page-guides .location-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+#page-guides .location-card {
+      background: rgba(14,16,13,0.88);
+      border: 1px solid rgba(120,36,28,0.22);
+      border-top: 1px solid rgba(140,44,34,0.45);
+      border-radius: 3px;
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+      position: relative;
+    }
+#page-guides .location-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(154,42,32,0.65), transparent);
+      z-index: 1;
+    }
+#page-guides .location-img {
+      width: 100%; height: 200px;
+      object-fit: cover;
+      object-position: center;
+      filter: grayscale(30%) brightness(0.75) contrast(1.05);
+      display: block;
+    }
+#page-guides .location-img-placeholder {
+      width: 100%; height: 200px;
+      background: rgba(20,6,6,0.9);
+      display: flex; align-items: center; justify-content: center;
+    }
+#page-guides .location-body { padding: 18px 20px 20px; }
+#page-guides .location-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem; color: #9a2a20;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+#page-guides .location-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: #dde2d8; margin-bottom: 10px;
+    }
+#page-guides .location-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem; color: #7a8274; line-height: 1.65;
+    }
+#page-guides .location-desc strong { color: #d4d9ce; }
+#page-guides .location-ores {
+      display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;
+    }
+#page-guides .location-ore-badge {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #7a8274;
+      background: rgba(18,20,16,0.75);
+      border: 1px solid rgba(100,32,24,0.22);
+      border-radius: 2px; padding: 3px 8px;
+    }
+#page-guides .section-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #9a2a20;
+      border-left: 2px solid #9a2a20;
+      padding-left: 10px;
+      margin-bottom: 48px;
+    }
+#page-guides .location-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      overflow: hidden;
+    }
+#page-guides .location-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(154,42,32,0.35);
+    }
+#page-guides .location-img {
+      transition: transform 0.4s ease, filter 0.4s ease;
+    }
+#page-guides .location-card:hover .location-img {
+      transform: scale(1.06);
+      filter: grayscale(10%) brightness(0.9) contrast(1.08);
+    }
+#page-guides .ore-card {
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+#page-guides .ore-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(154,42,32,0.45);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.4);
+    }
+#page-guides .card {
+      transition: transform 0.2s ease, border-color 0.2s, box-shadow 0.2s;
+    }
+#page-guides .card:hover {
+      transform: translateY(-3px);
+    }
+#page-guides .cell:not(.empty) {
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    }
+#page-guides .cell:not(.empty):hover {
+      transform: scale(1.12);
+      z-index: 2;
+    }
+#page-guides .card:hover .output-cell {
+      box-shadow: 0 0 16px rgba(154,42,32,0.25);
+    }
+#page-guides .ore-card:hover .ore-icon svg, #page-guides .card:hover .card-icon svg {
+      transition: transform 0.3s ease;
+      transform: rotate(-6deg) scale(1.1);
+    }
+#page-guides .location-ore-badge {
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      cursor: default;
+    }
+#page-guides .location-ore-badge:hover {
+      background: rgba(154,42,32,0.15);
+      color: #d4d9ce;
+      border-color: rgba(154,42,32,0.45);
+    }
+#page-guides .legend-item {
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      cursor: default;
+    }
+#page-guides .legend-item:hover {
+      background: rgba(154,42,32,0.08);
+      border-color: rgba(154,42,32,0.35);
+      color: #d4d9ce;
+    }
+#page-guides .section-label {
+      transition: border-color 0.2s, color 0.2s;
+    }
+#page-guides .section-label:hover {
+      color: #dde2d8;
+      border-color: #dde2d8;
+    }
+#page-guides .pickaxe-banner {
+      transition: border-color 0.2s, background 0.2s;
+    }
+#page-guides .pickaxe-banner:hover {
+      border-color: rgba(154,42,32,0.55);
+      background: rgba(20,22,18,0.94);
+    }
+#page-guides .section-divider-title {
+      width: 100%;
+      max-width: 1180px;
+      margin: 80px 0 0 5%;
+      padding: 0 40px 40px 60px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+#page-guides .section-divider-title .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(100,108,90,0.4), transparent);
+      max-width: 300px;
+    }
+#page-guides .section-divider-title .line:first-child {
+      display: none;
+    }
+#page-guides .section-divider-title h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #c8ccc0;
+      white-space: nowrap;
+    }
+#page-guides .section-divider-title h2 span {
+      color: #9a2a20;
+    }
+@keyframes g-fl-appear {
+      0%          { opacity: 0; }
+      5%          { opacity: var(--peak); }
+      12%         { opacity: calc(var(--peak) * 0.7); }
+      18%         { opacity: var(--peak); }
+      28%         { opacity: 0; }
+      100%        { opacity: 0; }
+    }
+@keyframes g-fl-sweep {
+      0%   { transform: rotate(var(--angle-start)) scaleX(1); }
+      40%  { transform: rotate(var(--angle-end)) scaleX(0.85); }
+      70%  { transform: rotate(calc(var(--angle-end) - 6deg)) scaleX(1); }
+      100% { transform: rotate(var(--angle-start)) scaleX(1); }
+    }
+#page-guides .flashlight {
+      position: fixed;
+      pointer-events: none;
+      z-index: 2;
+      transform-origin: var(--origin-x, 50%) var(--origin-y, 100%);
+      animation:
+        g-fl-appear var(--dur) ease-in-out var(--delay) infinite,
+        g-fl-sweep  calc(var(--dur) * 0.8) ease-in-out var(--delay) infinite;
+    }
+#page-guides .flashlight svg {
+      width: var(--size, 180px);
+      height: auto;
+      filter: blur(var(--blur, 8px));
+    }
+
+    /* Item PNGs are 16×16 — scale by whole numbers (2× = 32px, 1× = 16px) and keep pixels sharp */
+    #page-guides .item-img { image-rendering: pixelated; image-rendering: crisp-edges; image-rendering: pixelated; display: block; object-fit: contain; }
+    #page-guides .item-img.missing { opacity: 0.25; background: #2a0808; }
   </style>
 </head>
 <body>
@@ -1122,6 +1665,7 @@
     <li class="nav-tab active" data-page="home">Home</li>
     <li class="nav-tab"       data-page="map">Map</li>
     <li class="nav-tab"       data-page="servers">Servers</li>
+    <li class="nav-tab"       data-page="guides">Guides</li>
   </ul>
 </nav>
 
@@ -1323,6 +1867,487 @@
   </div>
 </div>
 
+
+<!-- ════════════════════════════
+     GUIDES PAGE
+════════════════════════════ -->
+<div id="page-guides" class="page">
+<div class="bg-scene">
+  <img src="assets/guides/background.jpg" class="bg-photo" alt=""/>
+  <div class="bg-overlay"></div>
+</div>
+
+
+
+
+<div class="g-inner">
+  <header>
+    <h1>Craft<span>ing</span> Guide</h1>
+    <p class="header-sub">[ custom kubejs recipes — hover cells for ingredient info ]</p>
+    <div class="header-divider"></div>
+  </header>
+  <div class="section-divider-title" style="margin-top:40px;">
+    <div class="line"></div>
+    <h2>Crafting <span>Guide</span></h2>
+    <div class="line"></div>
+  </div>
+  <div class="grid" id="guideCards"></div>
+
+<script>
+(function(){
+
+  /* ── Item icon map ── id → file inside assets/items/ (16×16 PNGs, shown pixelated) ── */
+  const ITEM_DIR = 'assets/items/';
+  const ITEMS = {
+    'minecraft:stick': 'minecraft/stick.png',
+    'minecraft:spruce_planks': 'minecraft/spruce_planks.png',
+    'minecraft:copper_ingot': 'minecraft/copper_ingot.png',
+    'minecraft:raw_copper': 'minecraft/raw_copper.png',
+    'minecraft:raw_iron': 'minecraft/raw_iron.png',
+    'minecraft:iron_ingot': 'minecraft/iron_ingot.png',
+    'chipped:vertical_dark_oak_planks': 'chipped/vertical_dark_oak_planks.png',
+    'chipped:reinforced_stripped_dark_oak_log': 'chipped/reinforced_stripped_dark_oak_log.png',
+    'chipped:reinforced_gray_concrete': 'chipped/reinforced_gray_concrete.png',
+    'chipped:rounded_raw_iron_block_bricks': 'chipped/rounded_raw_iron_block_bricks.png',
+    'chipped:roped_ladder': 'chipped/roped_ladder.png',
+    'securitycraft:keypad_door_item': 'securitycraft/keypad_door_item.png',
+    'minetraps:obstacle': 'minetraps/obstacle.png',
+    'minetraps:barbed_wire': 'minetraps/barbed_wire.png',
+  };
+
+  const LABELS = {
+  'minecraft:stick':'Stick','minecraft:spruce_planks':'Spruce Planks',
+  'minecraft:copper_ingot':'Copper Ingot','minecraft:raw_iron':'Raw Iron',
+  'minecraft:iron_ingot':'Iron Ingot','minecraft:raw_copper':'Raw Copper',
+  'chipped:vertical_dark_oak_planks':'Vertical Dark Oak Planks',
+  'chipped:reinforced_stripped_dark_oak_log':'Reinforced Dark Oak Log',
+  'chipped:reinforced_gray_concrete':'Reinforced Gray Concrete',
+  'chipped:rounded_raw_iron_block_bricks':'Rounded Iron Block Bricks',
+  'chipped:roped_ladder':'Roped Ladder',
+  'securitycraft:keypad_door_item':'Keypad Door',
+  'minetraps:obstacle':'Obstacle','minetraps:barbed_wire':'Barbed Wire',
+};
+
+  function img(id){
+    const f = ITEMS[id] || id.replace(':','/') + '.png';
+    return `<img class="item-img" src="${ITEM_DIR}${f}" alt="" draggable="false" onerror="this.classList.add('missing')">`;
+  }
+function lbl(id){ return LABELS[id]||id; }
+
+const recipes=[
+  {output:'chipped:vertical_dark_oak_planks',count:2,size:3,grid:['minecraft:stick','minecraft:stick','minecraft:stick','minecraft:stick','minecraft:spruce_planks','minecraft:stick','minecraft:stick','minecraft:stick','minecraft:stick']},
+  {output:'minecraft:spruce_planks',count:1,size:2,grid:['minecraft:stick','minecraft:stick','minecraft:stick','minecraft:stick']},
+  {output:'chipped:reinforced_stripped_dark_oak_log',count:2,size:3,grid:['minecraft:stick','minecraft:stick','minecraft:stick','minecraft:copper_ingot','chipped:vertical_dark_oak_planks','minecraft:copper_ingot','minecraft:stick','minecraft:stick','minecraft:stick']},
+  {output:'chipped:reinforced_gray_concrete',count:4,size:3,grid:['minecraft:stick','minecraft:stick','minecraft:stick','minecraft:raw_iron','chipped:reinforced_stripped_dark_oak_log','minecraft:raw_iron','minecraft:stick','minecraft:stick','minecraft:stick']},
+  {output:'chipped:rounded_raw_iron_block_bricks',count:4,size:3,grid:['minecraft:stick','minecraft:iron_ingot','minecraft:stick','minecraft:iron_ingot','chipped:reinforced_gray_concrete','minecraft:iron_ingot','minecraft:stick','minecraft:stick','minecraft:stick']},
+  {output:'securitycraft:keypad_door_item',count:1,size:3,grid:['minecraft:iron_ingot','minecraft:stick',null,'minecraft:iron_ingot','minecraft:iron_ingot',null,'minecraft:iron_ingot','minecraft:stick',null]},
+  {output:'minetraps:obstacle',count:1,size:3,grid:['minecraft:stick',null,'minecraft:stick',null,'minecraft:stick',null,'minecraft:stick',null,'minecraft:stick']},
+  {output:'minetraps:barbed_wire',count:1,size:3,grid:['minecraft:stick',null,'minecraft:stick','minecraft:raw_copper','minecraft:stick','minecraft:raw_copper','minecraft:stick',null,'minecraft:stick']},
+  {output:'chipped:roped_ladder',count:5,size:3,grid:['minecraft:stick',null,'minecraft:stick','minecraft:stick','minecraft:raw_copper','minecraft:stick','minecraft:stick',null,'minecraft:stick']},
+];
+
+function modLabel(id){const m=id.split(':')[0];return{minecraft:'Vanilla',chipped:'Chipped',securitycraft:'SecurityCraft',minetraps:'Minetraps'}[m]||m;}
+
+function buildCard(r){
+  const g=r.size===2?'g2':'g3';
+  const cells=r.grid.map(id=>id
+    ?`<div class="cell" data-tip="${lbl(id)}">${img(id)}</div>`
+    :`<div class="cell empty"></div>`
+  ).join('');
+  const seen=new Set();
+  const legend=r.grid.filter(Boolean).filter(id=>!seen.has(id)&&seen.add(id)).map(id=>
+    `<div class="legend-item">${img(id)}<span>${lbl(id)}</span></div>`
+  ).join('');
+  return `<div class="card">
+    <div class="card-header">
+      <div class="card-icon">${img(r.output)}</div>
+      <div><div class="card-title">${lbl(r.output)}</div><div class="card-mod">${modLabel(r.output)}</div></div>
+    </div>
+    <div class="craft-wrap">
+      <div class="craft-grid ${g}">${cells}</div>
+      <div class="arrow">→</div>
+      <div class="output-cell">${img(r.output)}<span class="count">×${r.count}</span></div>
+    </div>
+    <div class="legend">${legend}</div>
+  </div>`;
+}
+
+document.getElementById('guideCards').innerHTML=recipes.map(buildCard).join('');
+
+})();
+</script>
+
+  <!-- ── Mining Section ── -->
+  <div class="mining-section">
+
+  <div class="section-divider-title">
+    <div class="line"></div>
+    <h2>Mining <span>System</span></h2>
+    <div class="line"></div>
+  </div>
+
+    <p class="mining-intro">
+      Copper and iron are the main resources. You need a <strong>pickaxe</strong> to mine them.
+    </p>
+
+    <!-- pickaxe requirement -->
+    <div class="pickaxe-banner">
+      <img class="item-img" src="assets/items/tools/pickaxe.png" alt="" draggable="false" onerror="this.classList.add('missing')">
+      <div class="pickaxe-banner-text">
+Pickaxes can't be crafted. Find one by looting.
+      </div>
+    </div>
+
+    <!-- ore cards -->
+    <div class="ore-grid">
+      <div class="ore-card">
+        <div class="ore-card-header">
+          <div class="ore-icon">
+            <img class="item-img" src="assets/items/minecraft/raw_copper.png" alt="" draggable="false" onerror="this.classList.add('missing')">
+          </div>
+          <div>
+            <div class="ore-name">Copper Ore</div>
+          </div>
+        </div>
+        <p class="ore-desc">
+          Found in the <strong>quarry</strong> and the <strong>mountain mines</strong>. Used for reinforced logs, barbed wire and roped ladders.
+        </p>
+      </div>
+
+      <div class="ore-card">
+        <div class="ore-card-header">
+          <div class="ore-icon">
+            <img class="item-img" src="assets/items/minecraft/raw_iron.png" alt="" draggable="false" onerror="this.classList.add('missing')">
+          </div>
+          <div>
+            <div class="ore-name">Iron Ore</div>
+          </div>
+        </div>
+        <p class="ore-desc">
+          Found in the <strong>quarry</strong> and the <strong>mountain mines</strong>. Smelt it into iron ingots. Raw iron is also used for reinforced concrete.
+        </p>
+      </div>
+    </div>
+
+    <!-- locations -->
+    <div class="section-eyebrow" style="margin-bottom:20px;">Known extraction sites</div>
+    <div class="location-grid">
+
+      <div class="location-card">
+        <img class="location-img" src="assets/guides/quarry.jpg" alt="The Quarry"/>
+        <div class="location-body">
+          <div class="location-name">The Quarry</div>
+          <p class="location-desc">
+            A big open pit with <strong>copper and iron</strong> in the walls. Lots of ore, but you're out in the open.
+          </p>
+          <div class="location-ores">
+            <span class="location-ore-badge">⬤ Copper</span>
+            <span class="location-ore-badge">⬤ Iron</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="location-card">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;height:200px;overflow:hidden;">
+          <img style="width:100%;height:200px;object-fit:cover;object-position:center;filter:grayscale(30%) brightness(0.75) contrast(1.05);display:block;" src="assets/guides/mountain-mines-1.jpg" alt="Mountain Mine Entrance"/>
+          <img style="width:100%;height:200px;object-fit:cover;object-position:center;filter:grayscale(30%) brightness(0.75) contrast(1.05);display:block;" src="assets/guides/mountain-mines-2.jpg" alt="Mountain View"/>
+        </div>
+        <div class="location-body">
+          <div class="location-name">Mountain Mines</div>
+          <p class="location-desc">
+            Small <strong>abandoned mines</strong> in the mountains. Less ore than the quarry, and easy to miss.
+          </p>
+          <div class="location-ores">
+            <span class="location-ore-badge">⬤ Copper</span>
+            <span class="location-ore-badge">⬤ Iron</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ── Wood Chopping Section ── -->
+  <div class="mining-section">
+
+  <div class="section-divider-title">
+    <div class="line"></div>
+    <h2>Wood <span>Chopping</span></h2>
+    <div class="line"></div>
+  </div>
+
+    <p class="mining-intro">
+      Chopping trees gives you <strong>sticks</strong>. You need them for planks, ladders and most recipes.
+    </p>
+
+    <!-- axe requirement banner -->
+    <div class="pickaxe-banner">
+      <img class="item-img" src="assets/items/tools/axe.png" alt="" draggable="false" onerror="this.classList.add('missing')">
+      <div class="pickaxe-banner-text">
+Axes <strong>can't be crafted</strong>. Loot one or trade for it.
+      </div>
+    </div>
+
+    <!-- drop info card -->
+    <div class="ore-grid" style="margin-bottom:32px;">
+      <div class="ore-card">
+        <div class="ore-card-header">
+          <div class="ore-icon">
+            <img class="item-img" src="assets/items/minecraft/stick.png" alt="" draggable="false" onerror="this.classList.add('missing')">
+          </div>
+          <div>
+            <div class="ore-name">Stick Drop</div>
+          </div>
+        </div>
+        <p class="ore-desc">
+          <strong>60% chance</strong> to drop sticks, <strong>40%</strong> chance of nothing. A drop gives <strong>1 to 4 sticks</strong>.
+        </p>
+      </div>
+
+      <div class="ore-card">
+        <div class="ore-card-header">
+          <div class="ore-icon">
+            <img class="item-img" src="assets/items/tools/axe.png" alt="" draggable="false" onerror="this.classList.add('missing')">
+          </div>
+          <div>
+            <div class="ore-name">Getting an Axe</div>
+          </div>
+        </div>
+        <p class="ore-desc">
+          Find one by <strong>looting</strong> or get it by <strong>trading</strong>. There are several types, they all work for chopping.
+        </p>
+      </div>
+    </div>
+
+    <!-- two screenshots side by side -->
+    <div class="location-grid">
+      <div class="location-card">
+        <img class="location-img" src="assets/guides/forest-chopping.jpg" alt="Chopping wood in the forest" style="height:220px;"/>
+        <div class="location-body">
+          <div class="location-name">Forest Chopping</div>
+          <p class="location-desc">
+            Any tree works.
+          </p>
+          <div class="location-ores">
+            <span class="location-ore-badge">60% drop chance</span>
+            <span class="location-ore-badge">1–4 sticks</span>
+            <span class="location-ore-badge">requires axe</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="location-card">
+        <img class="location-img" src="assets/guides/axe-types.jpg" alt="Axes on display" style="height:220px;"/>
+        <div class="location-body">
+          <div class="location-name">Axe Types</div>
+          <p class="location-desc">
+            Hatchets, mauls and saws all work for chopping.
+          </p>
+          <div class="location-ores">
+            <span class="location-ore-badge">lootable</span>
+            <span class="location-ore-badge">tradeable</span>
+            <span class="location-ore-badge">not craftable</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ── Raiding Section ── -->
+  <div class="mining-section">
+
+  <div class="section-divider-title">
+    <div class="line"></div>
+    <h2>Raid <span>System</span></h2>
+    <div class="line"></div>
+  </div>
+
+    <p class="mining-intro">
+      Right now the sledgehammer is the only way to break into a base.
+    </p>
+
+    <!-- sledgehammer card -->
+    <div class="location-grid" style="grid-template-columns: 1fr 1fr; max-width: 860px; margin: 0 auto;">
+
+      <div class="location-card">
+        <img class="location-img" src="assets/guides/sledgehammer.jpg" alt="Sledgehammer" style="height:260px; object-position: center 30%;"/>
+        <div class="location-body">
+          <div class="location-name">Sledgehammer</div>
+          <p class="location-desc">
+            The only raiding tool at the moment. It <strong>can't be crafted</strong>, so loot it or trade for it. It's worth a lot.
+          </p>
+          <div class="location-ores">
+            <span class="location-ore-badge">not craftable</span>
+            <span class="location-ore-badge">loot or trade</span>
+            <span class="location-ore-badge">⚠ high value</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ore-card" style="display:flex; flex-direction:column; justify-content:center; gap:20px;">
+        <div>
+          <div class="ore-name" style="margin-bottom:10px; font-size:0.9rem;">Loot</div>
+          <p class="ore-desc">Search buildings, garages and warehouses.</p>
+        </div>
+        <div style="border-top: 1px solid rgba(100,32,24,0.2); padding-top:20px;">
+          <div class="ore-name" style="margin-bottom:10px; font-size:0.9rem;">Trade</div>
+          <p class="ore-desc">Some survivors may have one. It will cost a lot.</p>
+        </div>
+        <div style="border-top: 1px solid rgba(100,32,24,0.2); padding-top:20px;">
+          <p class="ore-desc" style="color:#9a2a20;">More raiding tools may be added later.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ── Building Tiers Section ── -->
+  <div class="mining-section">
+
+  <div class="section-divider-title">
+    <div class="line"></div>
+    <h2>Base <span>Tiers</span></h2>
+    <div class="line"></div>
+  </div>
+
+    <p class="mining-intro">
+      There are four tiers. Each one takes more hits to break than the one before.
+    </p>
+
+    <!-- tiers photo -->
+    <div class="location-card" style="max-width:860px; margin: 0 auto 40px;">
+      <img class="location-img" src="assets/guides/base-tiers.jpg" alt="Building Tiers" style="height:280px; object-position: center 40%;"/>
+      <div class="location-body">
+        <div class="location-name">The Four Tiers</div>
+        <p class="location-desc">
+          Left to right, weakest to strongest.
+        </p>
+      </div>
+    </div>
+
+    <!-- tier cards -->
+    <div class="ore-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+
+      <div class="ore-card" style="border-top-color: rgba(110,78,46,0.8);">
+        <div class="ore-card-header">
+          <div class="ore-icon" style="border-color: rgba(110,78,46,0.5);">
+            <img class="item-img" src="assets/items/chipped/vertical_dark_oak_planks.png" alt="" draggable="false" onerror="this.classList.add('missing')">
+          </div>
+          <div>
+            <div class="ore-name" style="font-size:0.82rem;">Vertical Planks</div>
+            <div class="ore-tag">Tier 1 — weakest</div>
+          </div>
+        </div>
+        <p class="ore-desc">The basic one. Easy to craft, breaks fast.</p>
+      </div>
+
+      <div class="ore-card" style="border-top-color: rgba(110,78,46,0.8);">
+        <div class="ore-card-header">
+          <div class="ore-icon" style="border-color: rgba(110,78,46,0.5);">
+            <img class="item-img" src="assets/items/chipped/reinforced_stripped_dark_oak_log.png" alt="" draggable="false" onerror="this.classList.add('missing')">
+          </div>
+          <div>
+            <div class="ore-name" style="font-size:0.82rem;">Reinforced Log</div>
+            <div class="ore-tag">Tier 2</div>
+          </div>
+        </div>
+        <p class="ore-desc">Wood with a metal band. Takes more hits than plain planks.</p>
+      </div>
+
+      <div class="ore-card" style="border-top-color: rgba(122,128,128,0.8);">
+        <div class="ore-card-header">
+          <div class="ore-icon" style="border-color: rgba(122,128,128,0.5);">
+            <img class="item-img" src="assets/items/chipped/reinforced_gray_concrete.png" alt="" draggable="false" onerror="this.classList.add('missing')">
+          </div>
+          <div>
+            <div class="ore-name" style="font-size:0.82rem;">Reinforced Concrete</div>
+            <div class="ore-tag">Tier 3</div>
+          </div>
+        </div>
+        <p class="ore-desc">Stronger than the two wood tiers.</p>
+      </div>
+
+      <div class="ore-card" style="border-top-color: rgba(138,144,152,0.8);">
+        <div class="ore-card-header">
+          <div class="ore-icon" style="border-color: rgba(138,144,152,0.5);">
+            <img class="item-img" src="assets/items/chipped/rounded_raw_iron_block_bricks.png" alt="" draggable="false" onerror="this.classList.add('missing')">
+          </div>
+          <div>
+            <div class="ore-name" style="font-size:0.82rem;">Rounded Iron Bricks</div>
+            <div class="ore-tag">Tier 4 — strongest</div>
+          </div>
+        </div>
+        <p class="ore-desc">The strongest tier. Takes the most hits to break.</p>
+      </div>
+
+    </div>
+
+    <!-- warning banner -->
+    <div class="pickaxe-banner" style="margin-top:32px; border-color: rgba(154,42,32,0.5);">
+      <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+        <polygon points="18,4 32,30 4,30" fill="none" stroke="#9a2a20" stroke-width="2.5" stroke-linejoin="round"/>
+        <line x1="18" y1="14" x2="18" y2="22" stroke="#9a2a20" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="18" cy="26" r="1.5" fill="#9a2a20"/>
+      </svg>
+      <div class="pickaxe-banner-text">
+A sledgehammer can break <strong>every tier</strong>.
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ── Keypad Door Section ── -->
+  <div class="mining-section">
+
+  <div class="section-divider-title">
+    <div class="line"></div>
+    <h2>Keypad <span>Door</span></h2>
+    <div class="line"></div>
+  </div>
+
+    <p class="mining-intro">
+      Set a code for your door, keep it to yourself and <strong>don't forget it.</strong>
+    </p>
+
+    <div class="location-grid" style="grid-template-columns: 1fr 1fr; max-width: 860px; margin: 0 auto;">
+
+      <div class="location-card">
+        <img class="location-img" src="assets/guides/keypad-door.jpg" alt="Keypad Door" style="height:260px; object-position: center;"/>
+        <div class="location-body">
+          <div class="location-name">Keypad Door</div>
+          <p class="location-desc">
+            Only opens with the code. <strong>A forgotten password can't be recovered</strong>, and you'll be locked out of your own base.
+          </p>
+          <div class="location-ores">
+            <span class="location-ore-badge">craftable</span>
+            <span class="location-ore-badge">code protected</span>
+            <span class="location-ore-badge">⚠ don't forget your password</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ore-card" style="display:flex; flex-direction:column; justify-content:center; gap:20px;">
+        <div>
+          <div class="ore-name" style="margin-bottom:10px; font-size:0.9rem;">Can Be Raided</div>
+          <p class="ore-desc">A sledgehammer can break it, but it uses up a lot of durability.</p>
+        </div>
+        <div style="border-top: 1px solid rgba(100,32,24,0.2); padding-top:20px;">
+          <div class="ore-name" style="margin-bottom:10px; font-size:0.9rem;">Stay Hidden</div>
+          <p class="ore-desc">If nobody knows where your door is, nobody can raid it.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</div>
 
 <!-- ════════════════════════════
      JAVASCRIPT
